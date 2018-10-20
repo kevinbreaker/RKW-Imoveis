@@ -1,0 +1,27 @@
+<mat-toolbar id="nav-principal">
+  <mat-toolbar-row>
+      <button mat-icon-button (click)="drawer.toggle()">
+          <mat-icon>menu</mat-icon>
+      </button>
+      <span>RKW Imóveis</span>
+      <span class="spacer"></span>
+      <button mat-icon-button>
+          <mat-icon>logout</mat-icon>
+      </button>
+  </mat-toolbar-row>
+</mat-toolbar>
+
+<mat-drawer-container class="conteudo" hasBackdrop="false">
+  <mat-drawer #drawer mode="side" opened>
+      <mat-nav-list class="menu_sidenav">
+          <mat-list-item *ngFor="let m of menu" [routerLink]="m.rota" routerLinkActiveOptions="{exact: true}">
+              <mat-icon matListIcon>{{m.icone}}</mat-icon>
+              <h4 matLine>{{m.title}}</h4>
+          </mat-list-item>
+      </mat-nav-list>
+  </mat-drawer>
+  <mat-drawer-content>
+      <!-- <mat-card>Simple card</mat-card> -->
+      <router-outlet></router-outlet>
+  </mat-drawer-content>
+</mat-drawer-container>

@@ -1,0 +1,54 @@
+<mat-card class="mat-card-dashboard">
+        <div class="login-container">
+                <mat-card class="login-card">
+            
+                    <mat-card-title>
+                        <mat-toolbar color="primary">
+                            <span>Entrar</span>
+                            <span class="spacer"></span>
+                            <mat-spinner color="accent" diameter="30" strokeWidth="3" *ngIf="configuracao.isLoading"></mat-spinner>
+                            <!-- <mat-spinner ></mat-spinner> -->
+                        </mat-toolbar>
+                    </mat-card-title>
+            
+                    <mat-card-content>
+                        <form (ngSubmit)="onSubmit()" [formGroup]="loginFormulario">
+                            <mat-form-field *ngIf="!configuracao.isLogin">
+                                <input matInput type="text" placeholder="Nome" formControlName="nome">
+                                <mat-error *ngIf="nome.hasError('required')">
+                                    Este campo é obrigatório
+                                </mat-error>
+                                <mat-error *ngIf="nome.hasError('minlength')">
+                                    O nome não pode ser menor que 5 caracteres
+                                </mat-error>
+                                <mat-error *ngIf="nome.hasError('maxlength')">
+                                    O nome não pode ser maior que 50 caracteres
+                                </mat-error>
+                            </mat-form-field>
+                            <mat-form-field>
+                                <input matInput type="text" placeholder="Email" formControlName="email">
+                                <mat-error *ngIf="email.hasError('required')">
+                                    Este campo é obrigatório
+                                </mat-error>
+                                <mat-error *ngIf="email.hasError('email')">
+                                    Este endereço de email não é valido.
+                                </mat-error>
+                            </mat-form-field>
+                            <mat-form-field>
+                                <input matInput type="password" placeholder="Senha" formControlName="password">
+                                <mat-error *ngIf="password.hasError('required')">
+                                    Este campo é obrigatório
+                                </mat-error>
+                                <mat-error *ngIf="password.hasError('minlength')">
+                                    A senha deve ter pelo menos 6 caracteres
+                                </mat-error>
+                            </mat-form-field>
+            
+                            <button type="submit" mat-stroked-button color="primary" [disabled]="loginFormulario.invalid">{{configuracao.actionText}}</button>
+                            <button type="button" mat-button (click)="changeAction()">{{configuracao.buttonActionText}}</button>
+                        </form>
+                    </mat-card-content>
+            
+                </mat-card>
+            </div>
+</mat-card>

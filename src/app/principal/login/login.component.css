@@ -1,0 +1,21 @@
+.login-container    {
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-content: center;
+    align-items: center;
+    /* background-color: #eceff4; */
+}
+
+.login-card {
+    width: 300px;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+}
+
+mat-spinner {
+    stroke: #FFF;
+}
