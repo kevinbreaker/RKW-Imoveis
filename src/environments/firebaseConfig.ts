@@ -1,4 +1,4 @@
-// cole apikey do firebase aqui.
+// cole apikey do firebase aquii.
 
 export const firebaseConf = {
     apiKey: '<API_KEY>',
