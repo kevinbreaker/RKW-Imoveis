@@ -11,6 +11,7 @@ export class PrincipalComponent implements OnInit {
         { title: 'Home', icone: 'home', rota: '' },
         { title: 'Imovéis', icone: 'location_city', rota: '/imoveis' },
         { title: 'Planos', icone: 'attach_money', rota: '/planos' },
+        { title: 'Anunciar', icone: 'add_circle', rota: '/anunciar' },
         { title: 'Entrar', icone: 'person', rota: '/login' },
         { title: 'Novo Usuário', icone: 'person_add', rota: '/signup' },
     ];

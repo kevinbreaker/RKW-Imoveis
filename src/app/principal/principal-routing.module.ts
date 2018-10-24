@@ -1,3 +1,4 @@
+import { AnunciarComponent } from './anunciar/anunciar.component';
 import { LoginComponent } from './login/login.component';
 import { PlanosComponent } from './planos/planos.component';
 import { PrincipalComponent } from './principal.component';
@@ -15,13 +16,18 @@ const routes: Routes = [
                 component: ImoveisComponent
             },
             {
+                path: 'anunciar',
+                component: AnunciarComponent
+            },
+            {
                 path: 'planos',
                 component: PlanosComponent
             },
             {
                 path: 'login',
                 component: LoginComponent
-            }
+            },
+            {path: '**', redirectTo: 'login'}
         ]
     }
 ];

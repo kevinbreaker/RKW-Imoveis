@@ -10,6 +10,7 @@ import { AgmCoreModule } from '@agm/core';
 import { PlanosComponent } from './planos/planos.component';
 import { LoginComponent } from './login/login.component';
 import { DialogImovelViewComponent } from './components/dialog-imovel-view/dialog-imovel-view.component';
+import { AnunciarComponent } from './anunciar/anunciar.component';
 
 
 @NgModule({
@@ -26,7 +27,8 @@ import { DialogImovelViewComponent } from './components/dialog-imovel-view/dialo
     ImoveisComponent,
     PlanosComponent,
     LoginComponent,
-    DialogImovelViewComponent
+    DialogImovelViewComponent,
+    AnunciarComponent
   ],
   entryComponents: [
     DialogImovelViewComponent
