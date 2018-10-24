@@ -2,15 +2,15 @@
     <mat-horizontal-stepper #stepper>
         <mat-step [stepControl]="firstFormGroup">
           <form [formGroup]="firstFormGroup">
-            <ng-template matStepLabel>Localização do Imóvel</ng-template>
+            <ng-template matStepLabel>Informe a Localização</ng-template>
             <mat-form-field>
-              <input matInput placeholder="Last name, First name" formControlName="firstCtrl" required>
+              <input matInput placeholder="Localização" formControlName="firstCtrl" required>
             </mat-form-field>
             <div>
               <button mat-button matStepperNext>Next</button>
             </div>
 
-            <agm-map [latitude]="-8.181549" [longitude]="-34.919735" [zoom]="15" (mapClick)="mapaClicado($event)">
+            <agm-map [latitude]="suaLatitude" [longitude]="suaLogintude" [zoom]="15" (mapClick)="mapaClicado($event)">
               <agm-marker  [latitude]="latitude" [longitude]="longitude"></agm-marker>
           </agm-map>
           </form>
