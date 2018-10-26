@@ -1,3 +1,4 @@
+import { AuthService } from './../core/services/auth/auth.service';
 import { environment } from './../../environments/environment';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
@@ -11,6 +12,8 @@ import { PlanosComponent } from './planos/planos.component';
 import { LoginComponent } from './login/login.component';
 import { DialogImovelViewComponent } from './components/dialog-imovel-view/dialog-imovel-view.component';
 import { AnunciarComponent } from './anunciar/anunciar.component';
+import { AngularFireDatabaseModule } from 'angularfire2/database';
+import { AngularFireAuthModule } from 'angularfire2/auth';
 
 
 @NgModule({
@@ -21,6 +24,8 @@ import { AnunciarComponent } from './anunciar/anunciar.component';
       apiKey: environment.ApiKeyGoogleMaps
   }),
     AngularFireModule.initializeApp(environment.firebase),
+    AngularFireDatabaseModule,
+    AngularFireAuthModule,
     PrincipalRoutingModule
   ],
   declarations: [

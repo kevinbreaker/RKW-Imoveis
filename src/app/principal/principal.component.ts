@@ -1,3 +1,4 @@
+import { AuthService } from './../core/services/auth/auth.service';
 import { Component, OnInit } from '@angular/core';
 
 @Component({
@@ -12,13 +13,18 @@ export class PrincipalComponent implements OnInit {
         { title: 'Imovéis', icone: 'location_city', rota: '/imoveis' },
         { title: 'Planos', icone: 'attach_money', rota: '/planos' },
         { title: 'Anunciar', icone: 'add_circle', rota: '/anunciar' },
-        { title: 'Entrar', icone: 'person', rota: '/login' },
-        { title: 'Novo Usuário', icone: 'person_add', rota: '/signup' },
+        { title: 'Entrar', icone: 'person', rota: '/login' }
     ];
 
-    constructor() { }
+    constructor(
+        private authService: AuthService
+    ) { }
 
     ngOnInit() {
+    }
+
+    logout() {
+        this.authService.logout();
     }
 
 }

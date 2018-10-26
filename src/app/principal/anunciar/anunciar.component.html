@@ -4,7 +4,7 @@
           <form [formGroup]="firstFormGroup">
             <ng-template matStepLabel>Informe a Localização</ng-template>
             <mat-form-field>
-              <input matInput placeholder="Localização" formControlName="firstCtrl" required>
+              <input matInput placeholder="Localização" formControlName="nome" required>
             </mat-form-field>
             <div>
               <button mat-button matStepperNext>Next</button>
@@ -19,7 +19,7 @@
           <form [formGroup]="secondFormGroup">
             <ng-template matStepLabel>Fill out your address</ng-template>
             <mat-form-field>
-              <input matInput placeholder="Address" formControlName="secondCtrl" required>
+              <input matInput placeholder="Address" formControlName="endereco" required>
             </mat-form-field>
             <div>
               <button mat-button matStepperPrevious>Back</button>
@@ -32,7 +32,7 @@
           You are now done.
           <div>
             <button mat-button matStepperPrevious>Back</button>
-            <button mat-button (click)="stepper.reset()">Reset</button>
+            <button mat-button (click)="anunciar()">Reset</button>
           </div>
         </mat-step>
       </mat-horizontal-stepper>
