@@ -14,14 +14,18 @@ mat-drawer-container > mat-drawer {
     height: 100vh;
 }
 
-h4, mat-icon {
+.menulist {
     color: #6B919F;;
 }
 
-h4:hover, mat-icon:hover {
+.menulist:hover {
     color: #FFF;;
 }
 
 mat-drawer-container > mat-drawer-content {
     background-color: #eceff4;
+}
+
+.mat-drawer-content {
+    overflow: hidden;
 }

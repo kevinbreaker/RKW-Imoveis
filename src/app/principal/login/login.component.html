@@ -1,16 +1,16 @@
 <mat-card class="mat-card-dashboard">
         <div class="login-container">
                 <mat-card class="login-card">
-            
+
                     <mat-card-title>
-                        <mat-toolbar color="primary">
+                        <mat-toolbar>
                             <span>Entrar</span>
                             <span class="spacer"></span>
                             <mat-spinner color="accent" diameter="30" strokeWidth="3" *ngIf="configuracao.isLoading"></mat-spinner>
                             <!-- <mat-spinner ></mat-spinner> -->
                         </mat-toolbar>
                     </mat-card-title>
-            
+
                     <mat-card-content>
                         <form (ngSubmit)="onSubmit()" [formGroup]="loginFormulario">
                             <mat-form-field *ngIf="!configuracao.isLogin">
@@ -43,12 +43,12 @@
                                     A senha deve ter pelo menos 6 caracteres
                                 </mat-error>
                             </mat-form-field>
-            
+
                             <button type="submit" mat-stroked-button color="primary" [disabled]="loginFormulario.invalid">{{configuracao.actionText}}</button>
                             <button type="button" mat-button (click)="changeAction()">{{configuracao.buttonActionText}}</button>
                         </form>
                     </mat-card-content>
-            
+
                 </mat-card>
             </div>
 </mat-card>

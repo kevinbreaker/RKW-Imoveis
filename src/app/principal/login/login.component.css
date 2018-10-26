@@ -1,14 +1,21 @@
+mat-card {
+    overflow: hidden;
+}
+
+mat-card-title > mat-toolbar{
+    color: #FFF;
+    background-image: linear-gradient(to right, #064253, #52BCDA);
+}
 .login-container    {
-    height: 100vh;
     display: flex;
     justify-content: center;
     align-content: center;
     align-items: center;
-    /* background-color: #eceff4; */
 }
 
 .login-card {
-    width: 300px;
+    margin-top: 50px;
+    width: 400px;
 }
 
 form {
@@ -19,3 +26,4 @@ form {
 mat-spinner {
     stroke: #FFF;
 }
+
