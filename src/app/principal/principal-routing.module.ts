@@ -27,7 +27,7 @@ const routes: Routes = [
                 path: 'login',
                 component: LoginComponent
             },
-            {path: '**', redirectTo: 'login'}
+            {path: '**', redirectTo: 'anunciar'}
         ]
     }
 ];

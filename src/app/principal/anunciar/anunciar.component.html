@@ -1,39 +1,62 @@
 <mat-card class="mat-card-dashboard">
     <mat-horizontal-stepper #stepper>
         <mat-step [stepControl]="firstFormGroup">
-          <form [formGroup]="firstFormGroup">
+            <!-- <form [formGroup]="firstFormGroup"> -->
             <ng-template matStepLabel>Informe a Localização</ng-template>
-            <mat-form-field>
-              <input matInput placeholder="Localização" formControlName="nome" required>
+            <!-- <mat-form-field>
+                    <input matInput placeholder="Localização" formControlName="localizacao" required>
+                </mat-form-field> -->
+
+
+            <!-- <mat-form-field class="localizacao">
+                    <input matInput placeholder="Buscar Localização" autocorrect="off" autocapitalize="off" spellcheck="off" type="text" class="form-control" #search [formControl]="searchControl">
+                        <button mat-raised-button matSuffix color="primary" (click)="buscarNoMapa()">Buscar</button>
+
+                </mat-form-field> -->
+            <!-- <agm-map [latitude]="suaLatitude" [longitude]="suaLogintude" [zoom]="zoom" (mapClick)="mapaClicado($event)">
+                    <agm-marker [latitude]="latitude" [longitude]="longitude"></agm-marker>
+                </agm-map> -->
+            <!-- </form> -->
+            <mat-form-field class="localizacao">
+                <input matInput placeholder="Buscar Localização" [(ngModel)]='location.address_level_1' #search
+                    id="searchField">
+                <button mat-raised-button matSuffix color="primary" (click)="updateOnMap()">
+                    <span>
+                        Buscar
+                    </span>
+                </button>
             </mat-form-field>
-            <div>
-              <button mat-button matStepperNext>Next</button>
+            <agm-map #map [latitude]="location.lat" [longitude]="location.lng" [zoom]="location.zoom" (mapClick)="mapaClicado($event)">
+                <agm-marker [latitude]="location.marker.lat" [longitude]="location.marker.lng"></agm-marker>
+            </agm-map>
+            <h3>{{enderecoFull}}</h3>
+            <div class="botoes">
+                <button mat-raised-button matStepperNext>Próximo</button>
             </div>
 
-            <agm-map [latitude]="suaLatitude" [longitude]="suaLogintude" [zoom]="15" (mapClick)="mapaClicado($event)">
-              <agm-marker  [latitude]="latitude" [longitude]="longitude"></agm-marker>
-          </agm-map>
-          </form>
+
         </mat-step>
         <mat-step [stepControl]="secondFormGroup">
-          <form [formGroup]="secondFormGroup">
-            <ng-template matStepLabel>Fill out your address</ng-template>
-            <mat-form-field>
-              <input matInput placeholder="Address" formControlName="endereco" required>
-            </mat-form-field>
-            <div>
-              <button mat-button matStepperPrevious>Back</button>
-              <button mat-button matStepperNext>Next</button>
-            </div>
-          </form>
+            <form [formGroup]="secondFormGroup">
+                <ng-template matStepLabel>Dados do imóvel</ng-template>
+                <mat-form-field>
+                    <input matInput placeholder="Address" formControlName="dadosImovel" required>
+                </mat-form-field>
+                <div class="botoes">
+                    <button mat-button matStepperPrevious>Voltar</button>
+                    <button mat-button matStepperNext>Proximo</button>
+                </div>
+            </form>
         </mat-step>
         <mat-step>
-          <ng-template matStepLabel>Done</ng-template>
-          You are now done.
-          <div>
-            <button mat-button matStepperPrevious>Back</button>
-            <button mat-button (click)="anunciar()">Reset</button>
-          </div>
+            <ng-template matStepLabel>Termos</ng-template>
+            Você concorda com os termos
+
+            <p>Walteann - Colocar os termos aqui</p>
+            <div>
+                <button mat-button matStepperPrevious>Voltark</button>
+                <!-- <button mat-button (click)="anunciar()">Enviar</button> -->
+            </div>
         </mat-step>
-      </mat-horizontal-stepper>
+    </mat-horizontal-stepper>
 </mat-card>

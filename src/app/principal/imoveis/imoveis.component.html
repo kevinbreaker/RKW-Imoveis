@@ -12,6 +12,7 @@
         <agm-map [latitude]="minhaPosicao.latitude" [longitude]="minhaPosicao.longitude" [zoom]="minhaPosicao.zoom">
             <agm-marker  [latitude]="minhaPosicao.latitude" [longitude]="minhaPosicao.longitude" [iconUrl]="minhaPosicao.icone"></agm-marker>
             <agm-marker *ngFor="let imovel of imoveis" (markerClick)="openDialog(imovel)" [latitude]="imovel.cooordenadas.latitude" [longitude]="imovel.cooordenadas.longitude"></agm-marker>
+            <agm-marker *ngFor="let imovel of imoveis2" (markerClick)="openDialog(imovel)" [latitude]="imovel.localizacao.latitude" [longitude]="imovel.localizacao.longitude"></agm-marker>
         </agm-map>
 
 

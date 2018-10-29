@@ -21,7 +21,9 @@ import { AngularFireAuthModule } from 'angularfire2/auth';
     CommonModule,
     SharedModule,
     AgmCoreModule.forRoot({
-      apiKey: environment.ApiKeyGoogleMaps
+      apiKey: environment.ApiKeyGoogleMaps,
+      libraries: ['places'],
+      language: 'pt-BR'
   }),
     AngularFireModule.initializeApp(environment.firebase),
     AngularFireDatabaseModule,
