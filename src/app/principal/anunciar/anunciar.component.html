@@ -1,25 +1,10 @@
 <mat-card class="mat-card-dashboard">
     <mat-horizontal-stepper #stepper>
         <mat-step [stepControl]="firstFormGroup">
-            <!-- <form [formGroup]="firstFormGroup"> -->
             <ng-template matStepLabel>Informe a Localização</ng-template>
-            <!-- <mat-form-field>
-                    <input matInput placeholder="Localização" formControlName="localizacao" required>
-                </mat-form-field> -->
 
-
-            <!-- <mat-form-field class="localizacao">
-                    <input matInput placeholder="Buscar Localização" autocorrect="off" autocapitalize="off" spellcheck="off" type="text" class="form-control" #search [formControl]="searchControl">
-                        <button mat-raised-button matSuffix color="primary" (click)="buscarNoMapa()">Buscar</button>
-
-                </mat-form-field> -->
-            <!-- <agm-map [latitude]="suaLatitude" [longitude]="suaLogintude" [zoom]="zoom" (mapClick)="mapaClicado($event)">
-                    <agm-marker [latitude]="latitude" [longitude]="longitude"></agm-marker>
-                </agm-map> -->
-            <!-- </form> -->
             <mat-form-field class="localizacao">
-                <input matInput placeholder="Buscar Localização" [(ngModel)]='location.address_level_1' #search
-                    id="searchField">
+                <input matInput placeholder="Buscar Localização" [(ngModel)]='location.address_level_1' #search id="searchField">
                 <button mat-raised-button matSuffix color="primary" (click)="updateOnMap()">
                     <span>
                         Buscar
@@ -29,21 +14,52 @@
             <agm-map #map [latitude]="location.lat" [longitude]="location.lng" [zoom]="location.zoom" (mapClick)="mapaClicado($event)">
                 <agm-marker [latitude]="location.marker.lat" [longitude]="location.marker.lng"></agm-marker>
             </agm-map>
-            <h3>{{enderecoFull}}</h3>
-            <div class="botoes">
-                <button mat-raised-button matStepperNext>Próximo</button>
+            <div class="enderecoFull">
+                <span>{{enderecoFull}}</span>
+                <mat-spinner color="accent" diameter="30" strokeWidth="3" *ngIf="isLoading"></mat-spinner>
             </div>
 
+            <div class="botoes">
+                <button mat-raised-button matStepperNext (click)="proximaEtapa()" [disabled]="!enderecoFull">Próximo</button>
+            </div>
 
         </mat-step>
         <mat-step [stepControl]="secondFormGroup">
             <form [formGroup]="secondFormGroup">
                 <ng-template matStepLabel>Dados do imóvel</ng-template>
-                <mat-form-field>
-                    <input matInput placeholder="Address" formControlName="dadosImovel" required>
+
+                <mat-form-field id="endereco">
+                    <input matInput placeholder="Endereço Completo" formControlName="enderecoCompleto">
                 </mat-form-field>
+                <mat-form-field id="rua">
+                    <input matInput placeholder="Rua" formControlName="rua">
+                </mat-form-field>
+                <mat-form-field id="numero">
+                    <input matInput placeholder="Número" formControlName="numero">
+                </mat-form-field>
+                <mat-form-field id="bairro">
+                    <input matInput placeholder="Bairro/Cidade" formControlName="bairroCidade">
+                </mat-form-field>
+                <mat-form-field id="complemento">
+                    <input matInput placeholder="Complemento" formControlName="complemento">
+                </mat-form-field>
+                <mat-form-field id="pais">
+                    <input matInput placeholder="País" formControlName="pais">
+                </mat-form-field>
+                <mat-form-field id="estado">
+                    <input matInput placeholder="Estado" formControlName="estado">
+                </mat-form-field>
+                <mat-form-field id="cep">
+                    <input matInput placeholder="Cep" formControlName="cep">
+                </mat-form-field>
+
+                <mat-divider></mat-divider>
+                <mat-form-field>
+                    <input matInput placeholder="teste">
+                </mat-form-field>
+
                 <div class="botoes">
-                    <button mat-button matStepperPrevious>Voltar</button>
+                    <button mat-button matStepperPrevious (click)="resetValues()">Voltar</button>
                     <button mat-button matStepperNext>Proximo</button>
                 </div>
             </form>

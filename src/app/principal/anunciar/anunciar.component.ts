@@ -1,3 +1,5 @@
+import { DadosImovel } from './../../shared/models/imovel/dadosImovel.model';
+import { Imovel } from './../../shared/models/imovel/imovel.model';
 import { AuthService } from './../../core/services/auth/auth.service';
 import { AngularFireAuth } from 'angularfire2/auth';
 import { StorageKeys } from './../../storagekeys';
@@ -12,8 +14,10 @@ import { SnackbarService } from '../../shared/utils/snackbar.service';
 
 
 import { MapsAPILoader } from '@agm/core';
+import { LocalizacaoImovel } from 'src/app/shared/models/imovel/localizacaoImovel.model';
 
 declare var google: any;
+
 
 interface Marker {
     lat: number;
@@ -46,6 +50,8 @@ interface Location {
 export class AnunciarComponent implements OnInit, AfterViewInit {
 
 
+    localizacaoImovel: LocalizacaoImovel;
+
     geocoder: any;
     public location: Location = {
         lat: 0,
@@ -67,6 +73,8 @@ export class AnunciarComponent implements OnInit, AfterViewInit {
     latitude = null;
     longitude = null;
     coord = {};
+
+    isLoading = false;
 
     enderecoFull: string = null;
 
@@ -94,6 +102,7 @@ export class AnunciarComponent implements OnInit, AfterViewInit {
         this.mapsApiLoader.load().then(() => {
             this.geocoder = new google.maps.Geocoder();
         });
+
     }
 
     ngOnInit() {
@@ -101,24 +110,30 @@ export class AnunciarComponent implements OnInit, AfterViewInit {
             localizacao: ['', Validators.required]
         });
         this.secondFormGroup = this._formBuilder.group({
-            dadosImovel: ['', Validators.required]
+            enderecoCompleto: [{ value: '', disabled: true }, Validators.required],
+            rua: [{ value: '', disabled: true }, Validators.required],
+            bairroCidade: [{ value: '', disabled: true }, Validators.required],
+            numero: ['', Validators.required],
+            complemento: [''],
+            pais: [{ value: '', disabled: true }, Validators.required],
+            cep: [{ value: '', disabled: true }, Validators.required],
+            estado: [{ value: '', disabled: true }, Validators.required]
         });
-        this.validaUsuario();
+        // this.validaUsuario();
         this.teste();
-
-
 
     }
 
     ngAfterViewInit() {
         this.mapsAPILoader.load().then(() => {
             // let autocomplete = new google.maps.places.Autocomplete(this.searchElementRef.nativeElement, {
-                // tslint:disable-next-line:prefer-const
+            // tslint:disable-next-line:prefer-const
             let autocomplete = new google.maps.places.Autocomplete(this.searchElementRef.nativeElement, {
                 types: [],
-                componentRestrictions: {country: 'br'}
+                componentRestrictions: { country: 'br' }
             });
             autocomplete.addListener('place_changed', () => {
+                this.isLoading = true;
                 this.ngZone.run(() => {
                     // get the place result
                     // tslint:disable-next-line:prefer-const
@@ -126,6 +141,7 @@ export class AnunciarComponent implements OnInit, AfterViewInit {
 
                     // verify result
                     if (place.geometry === undefined || place.geometry === null) {
+                        this.isLoading = false;
                         return;
                     }
 
@@ -135,26 +151,61 @@ export class AnunciarComponent implements OnInit, AfterViewInit {
                     this.location.lat = this.location.marker.lat;
                     this.location.lng = this.location.marker.lng;
                     this.zoom = 19;
+                    this.enderecoFull = this.searchElementRef.nativeElement.value;
+                    this.isLoading = false;
                 });
             });
         });
     }
 
+    proximaEtapa() {
+        this.secondFormGroup.setValue({
+            enderecoCompleto: this.enderecoFull,
+            rua: this.enderecoFull.split(',')[0],
+            numero: (this.enderecoFull.split(',')[1]).split('-')[0],
+            bairroCidade: (this.enderecoFull.split(',')[2]).split('-')[1] ?
+                (this.enderecoFull.split(',')[1]).split('-')[1] + ' /' + (this.enderecoFull.split(',')[2]).split('-')[0] :
+                (this.enderecoFull.split(',')[1]).split('-')[1],
+            pais: this.enderecoFull.split(',')[4] ? this.enderecoFull.split(',')[4] : this.enderecoFull.split(',')[3],
+            estado: (this.enderecoFull.split(',')[2]).split('-')[1] ? (this.enderecoFull.split(',')[2]).split('-')[1]
+                : this.enderecoFull.split(',')[2],
+            cep: this.enderecoFull.split(',')[4] ? this.enderecoFull.split(',')[3] : null,
+            complemento: null
+        });
+        this.latitude = this.location.marker.lat;
+        this.longitude = this.location.marker.lng;
+    }
+
+    get enderecoCompleto(): FormControl {
+        return <FormControl>this.secondFormGroup.get('enderecoCompleto');
+    }
+
+    resetValues() {
+        this.secondFormGroup.setValue({
+            enderecoCompleto: '',
+            rua: '',
+            numero: '',
+            bairroCidade: '',
+            pais: '',
+            estado: '',
+            cep: '',
+            complemento: null
+        });
+        this.latitude = null;
+        this.longitude = null;
+    }
 
     mapaClicado($event: MouseEvent) {
+        this.isLoading = true;
         this.location.marker.lat = $event.coords.lat;
         this.location.marker.lng = $event.coords.lng;
-        // this.coord = {
-        //     latitude: this.latitude,
-        //     longitude: this.longitude
-        // };
+
         this.findAddressByCoordinates(this.location.marker.lat, this.location.marker.lng);
         console.log($event.coords.lat);
         console.log($event.coords.lng);
     }
 
     teste() {
-        // const image = 'https://developers.google.com/maps/documentation/javascript/examples/full/images/beachflag.png';
         if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition(posicao => {
                 this.location.lat = posicao.coords.latitude;
@@ -164,11 +215,11 @@ export class AnunciarComponent implements OnInit, AfterViewInit {
                 this.location.zoom = 18;
             });
         } else {
-            this.latitude = -8.059009022548944;
-            this.longitude = -34.88249920614351;
-            this.suaLatitude = null;
-            this.suaLogintude = null;
-            this.zoom = 18;
+            this.location.lat = -8.059009022548944;
+            this.location.lng = -34.88249920614351;
+            this.location.marker.lat = null;
+            this.location.marker.lng = null;
+            this.location.zoom = 18;
         }
     }
 
@@ -214,8 +265,9 @@ export class AnunciarComponent implements OnInit, AfterViewInit {
             this.router.navigate(['/login']);
         }
     }
-// procura endereco digitando o texto
+    // procura endereco digitando o texto
     updateOnMap() {
+        this.isLoading = true;
         let full_address: string = this.location.address_level_1 || '';
         if (this.location.address_level_2) { full_address = full_address + ' ' + this.location.address_level_2; }
         if (this.location.address_state) { full_address = full_address + ' ' + this.location.address_state; }
@@ -229,8 +281,6 @@ export class AnunciarComponent implements OnInit, AfterViewInit {
         this.geocoder.geocode({
             'address': address
         }, (results, status) => {
-            console.log(results);
-            console.log(status);
             if (status === google.maps.GeocoderStatus.OK) {
                 // tslint:disable-next-line:no-var-keyword
                 for (var i = 0; i < results[0].address_components.length; i++) {
@@ -259,11 +309,12 @@ export class AnunciarComponent implements OnInit, AfterViewInit {
                     this.location.marker.lng = results[0].geometry.location.lng();
                     this.location.marker.draggable = true;
                     this.location.viewport = results[0].geometry.viewport;
+                    this.isLoading = false;
                 }
 
                 this.map.triggerResize();
             } else {
-                alert('Sorry, this search produced no results.');
+                this.snackbarService.snackBarMessage('Sorry, this search produced no results');
             }
         });
     }
@@ -276,47 +327,14 @@ export class AnunciarComponent implements OnInit, AfterViewInit {
                 lng: lng
             }
         }, (results, status) => {
-            console.log(results);
-            this.decomposeAddressComponents(results);
+            console.log(results[0].formatted_address);
+            console.log(this.enderecoFull);
+            this.enderecoFull = results[0].formatted_address;
+            console.log(this.enderecoFull);
+            if (this.enderecoFull === results[0].formatted_address) {
+                this.isLoading = false;
+            }
         });
-    }
-
-    decomposeAddressComponents(addressArray) {
-        if (addressArray.length === 0) { return false; }
-        // tslint:disable-next-line:prefer-const
-        let address = addressArray[0].address_components;
-        this.enderecoFull = addressArray[0].formatted_address;
-
-        // this.location.address_level_1 = this.enderecoFull;
-        // tslint:disable-next-line:prefer-const
-        for (let element of address) {
-            if (element.length === 0 && !element['types']) { continue; }
-
-            if (element['types'].indexOf('street_number') > -1) {
-                this.location.address_level_1 = element['long_name'];
-                continue;
-            }
-            if (element['types'].indexOf('route') > -1) {
-                this.location.address_level_1 += ', ' + element['long_name'];
-                continue;
-            }
-            if (element['types'].indexOf('locality') > -1) {
-                this.location.address_level_2 = element['long_name'];
-                continue;
-            }
-            if (element['types'].indexOf('administrative_area_level_1') > -1) {
-                this.location.address_state = element['long_name'];
-                continue;
-            }
-            if (element['types'].indexOf('country') > -1) {
-                this.location.address_country = element['long_name'];
-                continue;
-            }
-            if (element['types'].indexOf('postal_code') > -1) {
-                this.location.address_zip = element['long_name'];
-                continue;
-            }
-        }
     }
 
 }

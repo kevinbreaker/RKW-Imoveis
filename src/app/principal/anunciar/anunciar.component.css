@@ -12,7 +12,40 @@ agm-map {
     margin-top: 20px;
 }
 
-h3  {
+.enderecoFull  {
     position: absolute;
     margin-top: 30px;
+    display: flex;
+    justify-content: flex-start;
+    flex-direction: row;
+}
+
+.enderecoFull > mat-spinner {
+    position: absolute;
+    right: -50px;
+    margin-top: -7px;
+}
+
+mat-form-field {
+    margin-left: 15px;
+}
+
+#endereco {
+    width: 40vw;
+}
+
+#rua {
+    width: 20vw;
+}
+
+#numero, #estado{
+    width: 5vw;
+}
+
+#cep, #pais{
+    width: 10vw;
+}
+
+#bairro, #complemento {
+    width: 18vw;
 }
