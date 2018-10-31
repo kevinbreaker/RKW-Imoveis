@@ -1,3 +1,6 @@
+mat-card {
+    overflow-y: scroll;
+}
 agm-map {
     height: 50vh;
 }
@@ -30,7 +33,7 @@ mat-form-field {
     margin-left: 15px;
 }
 
-#endereco {
+/* #endereco {
     width: 40vw;
 }
 
@@ -48,4 +51,68 @@ mat-form-field {
 
 #bairro, #complemento {
     width: 18vw;
+} */
+
+.tamanho1 {
+    width: 40vw;
+}
+
+.tamanho2 {
+    width: 20vw;
+}
+
+.tamanho3 {
+    width: 18vw;
+}
+
+.tamanho4 {
+    width: 10vw;
+}
+
+.tamanho5 {
+    width: 5vw;
+}
+
+.wc {
+    width: 50px;
+}
+
+.area {
+    width: 80px;
+}
+
+.tamanho6 {
+    width: 120px;
+}
+
+.campoDescricao {
+    width: 400px;
+    height: 250px;
+}
+
+.checkboxs {
+    height: 30px;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    /* text-align: center; */
+    align-items: center;
+    margin-top: 15px;
+    margin-bottom: 20px;
+}
+mat-checkbox {
+    margin: 0 15px;
+}
+
+.grupos {
+    display: flex;
+    width: 100%;
+    flex-direction: row;
+    justify-content: center;
+    text-align: center;
+}
+
+.grupo1, .grupo2 {
+    width: 50vw;
+    margin: 50px auto;
 }

@@ -4,7 +4,7 @@ import { AuthService } from './../../core/services/auth/auth.service';
 import { AngularFireAuth } from 'angularfire2/auth';
 import { StorageKeys } from './../../storagekeys';
 import { Component, OnInit, ViewChild, ElementRef, NgZone, AfterViewInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators, FormControl } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, FormControl, FormArray } from '@angular/forms';
 import { MAT_STEPPER_GLOBAL_OPTIONS } from '@angular/cdk/stepper';
 import { MouseEvent, InfoWindowManager, AgmMap } from '@agm/core';
 import { AngularFireDatabase, AngularFireList } from 'angularfire2/database';
@@ -50,6 +50,36 @@ interface Location {
 export class AnunciarComponent implements OnInit, AfterViewInit {
 
 
+    tipos = [
+        {
+            descricao: 'VENDA', valor: 'venda'
+        },
+        {
+            descricao: 'ALUGUEL', valor: 'aluguel'
+        }
+    ];
+
+    tipoImovel = [
+        { descricao: 'Casa', valor: 'casa'},
+        { descricao: 'Apartamento', valor: 'apartamento'},
+        { descricao: 'KitNet', valor: 'kitnet'},
+        { descricao: 'Comercial', valor: 'comercial'}
+    ];
+
+    quantidades = [
+        { valor: 1},
+        { valor: 2},
+        { valor: 3},
+        { valor: 4},
+        { valor: 5},
+        { valor: 6},
+        { valor: 7},
+        { valor: 8},
+        { valor: 9},
+        { valor: 10},
+        { valor: '+10'}
+    ];
+
     localizacaoImovel: LocalizacaoImovel;
 
     geocoder: any;
@@ -67,12 +97,10 @@ export class AnunciarComponent implements OnInit, AfterViewInit {
     firstFormGroup: FormGroup;
     secondFormGroup: FormGroup;
 
-    suaLatitude = null;
-    suaLogintude = null;
-
     latitude = null;
     longitude = null;
-    coord = {};
+
+    // condominio;
 
     isLoading = false;
 
@@ -117,11 +145,39 @@ export class AnunciarComponent implements OnInit, AfterViewInit {
             complemento: [''],
             pais: [{ value: '', disabled: true }, Validators.required],
             cep: [{ value: '', disabled: true }, Validators.required],
-            estado: [{ value: '', disabled: true }, Validators.required]
+            estado: [{ value: '', disabled: true }, Validators.required],
+
+            condominio: false,
+            valorCondominio: [''],
+            vaga: false,
+            iptu: false,
+            // imagens: this._formBuilder.array([this.createImage])
+            imagens: ''
         });
         // this.validaUsuario();
         this.teste();
 
+    }
+
+    get condominio(): FormControl {
+        return <FormControl>this.secondFormGroup.get('condominio');
+    }
+    get iptu(): FormControl {
+        return <FormControl>this.secondFormGroup.get('iptu');
+    }
+    get vaga(): FormControl {
+        return <FormControl>this.secondFormGroup.get('vaga');
+    }
+
+    get imagens(): FormControl {
+        return <FormControl>this.secondFormGroup.get('imagens');
+    }
+
+    createImage() {
+        return this._formBuilder.group({
+            img: '',
+            descricao: ''
+        });
     }
 
     ngAfterViewInit() {
@@ -156,6 +212,24 @@ export class AnunciarComponent implements OnInit, AfterViewInit {
                 });
             });
         });
+    }
+
+    uploadImage($event) {
+        const file = $event.target.files[0];
+        const fileReader = new FileReader();
+        fileReader.onloadend = () =>    {
+            this.secondFormGroup.patchValue({
+                imagens: fileReader.result
+            });
+        };
+        fileReader.readAsDataURL(file);
+        // fileReader.onloadend = () =>    {
+        //     this.secondFormGroup.patchValue({
+        //         imagens: fileReader.result
+        //     });
+        // };
+        // fileReader.readAsDataURL(file);
+        // console.log
     }
 
     proximaEtapa() {

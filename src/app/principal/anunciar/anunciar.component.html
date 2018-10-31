@@ -11,9 +11,9 @@
                     </span>
                 </button>
             </mat-form-field>
-            <agm-map #map [latitude]="location.lat" [longitude]="location.lng" [zoom]="location.zoom" (mapClick)="mapaClicado($event)">
+            <!-- <agm-map #map [latitude]="location.lat" [longitude]="location.lng" [zoom]="location.zoom" (mapClick)="mapaClicado($event)">
                 <agm-marker [latitude]="location.marker.lat" [longitude]="location.marker.lng"></agm-marker>
-            </agm-map>
+            </agm-map> -->
             <div class="enderecoFull">
                 <span>{{enderecoFull}}</span>
                 <mat-spinner color="accent" diameter="30" strokeWidth="3" *ngIf="isLoading"></mat-spinner>
@@ -28,34 +28,113 @@
             <form [formGroup]="secondFormGroup">
                 <ng-template matStepLabel>Dados do imóvel</ng-template>
 
-                <mat-form-field id="endereco">
-                    <input matInput placeholder="Endereço Completo" formControlName="enderecoCompleto">
+
+                <mat-form-field class="tamanho1">
+                    <input matInput placeholder="Título">
                 </mat-form-field>
-                <mat-form-field id="rua">
-                    <input matInput placeholder="Rua" formControlName="rua">
+                <mat-form-field>
+                    <mat-select placeholder="Tipo">
+                        <mat-option *ngFor="let tipo of tipos" [value]="tipo.valor">
+                            {{tipo.descricao}}
+                        </mat-option>
+                    </mat-select>
                 </mat-form-field>
-                <mat-form-field id="numero">
-                    <input matInput placeholder="Número" formControlName="numero">
+                <mat-form-field>
+                    <mat-select placeholder="Tipo de Imóvel">
+                        <mat-option *ngFor="let tipo of tipoImovel" [value]="tipo.valor">
+                            {{tipo.descricao}}
+                        </mat-option>
+                    </mat-select>
                 </mat-form-field>
-                <mat-form-field id="bairro">
-                    <input matInput placeholder="Bairro/Cidade" formControlName="bairroCidade">
+                <mat-form-field>
+                    <input matInput placeholder="Preço">
+                    <span matPrefix>R$&nbsp;&nbsp;&nbsp;</span>
                 </mat-form-field>
-                <mat-form-field id="complemento">
-                    <input matInput placeholder="Complemento" formControlName="complemento">
+                <mat-form-field class="area">
+                    <input matInput placeholder="Área">
+                    <span matSuffix>m²</span>
                 </mat-form-field>
-                <mat-form-field id="pais">
-                    <input matInput placeholder="País" formControlName="pais">
+                <mat-form-field class="wc">
+                    <mat-select placeholder="WC">
+                        <mat-option *ngFor="let wc of quantidades" [value]="wc.valor">
+                            {{wc.valor}}
+                        </mat-option>
+                    </mat-select>
                 </mat-form-field>
-                <mat-form-field id="estado">
-                    <input matInput placeholder="Estado" formControlName="estado">
+                <mat-form-field class="tamanho6">
+                    <mat-select placeholder="Nº de Quartos">
+                        <mat-option *ngFor="let quarto of quantidades" [value]="quarto.valor">
+                            {{quarto.valor}}
+                        </mat-option>
+                    </mat-select>
                 </mat-form-field>
-                <mat-form-field id="cep">
-                    <input matInput placeholder="Cep" formControlName="cep">
-                </mat-form-field>
+                <section class="checkboxs">
+                    <mat-checkbox formControlName="condominio">Condominio</mat-checkbox>
+                    <mat-form-field *ngIf="condominio.value">
+                        <input matInput placeholder="Valor Condominio" formControlName="valorCondominio">
+                        <span matPrefix>R$&nbsp;&nbsp;&nbsp;</span>
+                    </mat-form-field>
+                    <mat-form-field *ngIf="condominio.value">
+                        <input matInput placeholder="Valor com Condominio" disabled value="1900.00">
+                        <span matPrefix>R$&nbsp;&nbsp;&nbsp;</span>
+                    </mat-form-field>
+                    <mat-checkbox formControlName="iptu">IPTU</mat-checkbox>
+                    <mat-form-field *ngIf="iptu.value">
+                        <input matInput placeholder="Valor do IPTU">
+                        <span matPrefix>R$&nbsp;&nbsp;&nbsp;</span>
+                    </mat-form-field>
+                </section>
+                <section class="checkboxs">
+                    <mat-checkbox formControlName="vaga">Vaga</mat-checkbox>
+                    <mat-select class="tamanho6" placeholder="Nº de Vagas" *ngIf="vaga.value">
+                        <mat-option *ngFor="let vaga of quantidades" [value]="vaga.valor">
+                            {{vaga.valor}}
+                        </mat-option>
+                    </mat-select>
+                </section>
+
+                <section class="grupos">
+                    <section class="grupo1">
+                        <mat-form-field>
+                            <input matInput placeholder="Caracteristicas">
+                        </mat-form-field>
+                            <input (change)="uploadImage($event)" placeholder="IMGS" type="file">
+                        <img height="100" *ngIf="imagens.value" src="{{imagens.value}}" alt="">
+                    </section>
+
+                    <section class="grupo2">
+                        <mat-form-field class="campoDescricao" appearance="outline">
+                            <textarea class="campoDescricao" matInput placeholder="Descrição" type="text"></textarea>
+                        </mat-form-field>
+                    </section>
+                </section>
+
 
                 <mat-divider></mat-divider>
-                <mat-form-field>
-                    <input matInput placeholder="teste">
+
+                <mat-form-field class="tamanho1">
+                    <input matInput placeholder="Endereço Completo" formControlName="enderecoCompleto">
+                </mat-form-field>
+                <mat-form-field class="tamanho2">
+                    <input matInput placeholder="Rua" formControlName="rua">
+                </mat-form-field>
+                <mat-form-field class="tamanho5">
+                    <input matInput placeholder="Número" formControlName="numero">
+                </mat-form-field>
+                <mat-form-field class="tamanho3">
+                    <input matInput placeholder="Bairro/Cidade" formControlName="bairroCidade">
+                </mat-form-field>
+                <mat-form-field class="tamanho3">
+                    <input matInput placeholder="Complemento" formControlName="complemento">
+                </mat-form-field>
+                <mat-form-field class="tamanho4">
+                    <input matInput placeholder="País" formControlName="pais">
+                </mat-form-field>
+                <mat-form-field class="tamanho5">
+                    <input matInput placeholder="Estado" formControlName="estado">
+                </mat-form-field>
+                <mat-form-field class="tamanho4">
+                    <input matInput placeholder="Cep" formControlName="cep">
                 </mat-form-field>
 
                 <div class="botoes">

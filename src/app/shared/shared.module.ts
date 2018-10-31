@@ -18,7 +18,9 @@ import {
     MatPaginatorModule,
     MatDialogModule,
     MatStepperModule,
-    MatStepperIntl
+    MatStepperIntl,
+    MatSelectModule,
+    MAT_CHECKBOX_CLICK_ACTION
 } from '@angular/material';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 
@@ -39,6 +41,7 @@ import { SlickCarouselModule } from 'ngx-slick-carousel';
         MatListModule,
         MatRadioModule,
         MatSidenavModule,
+        MatSelectModule,
         MatStepperModule,
         MatSnackBarModule,
         MatPaginatorModule,
@@ -50,6 +53,7 @@ import { SlickCarouselModule } from 'ngx-slick-carousel';
     ],
     providers: [
         // {provide: MatStepperIntl, useClass: MyIntl},
+        {provide: MAT_CHECKBOX_CLICK_ACTION, useValue: 'check'}
     ],
     declarations: []
 })
