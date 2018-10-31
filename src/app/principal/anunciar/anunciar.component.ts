@@ -96,6 +96,7 @@ export class AnunciarComponent implements OnInit, AfterViewInit {
 
     firstFormGroup: FormGroup;
     secondFormGroup: FormGroup;
+    testeGroup: FormGroup;
 
     latitude = null;
     longitude = null;
@@ -151,8 +152,8 @@ export class AnunciarComponent implements OnInit, AfterViewInit {
             valorCondominio: [''],
             vaga: false,
             iptu: false,
-            // imagens: this._formBuilder.array([this.createImage])
-            imagens: ''
+            imagens: this._formBuilder.array([this.createImage()])
+            // imagens: ''
         });
         // this.validaUsuario();
         this.teste();
@@ -174,7 +175,7 @@ export class AnunciarComponent implements OnInit, AfterViewInit {
     }
 
     createImage() {
-        return this._formBuilder.group({
+        return this.testeGroup = this._formBuilder.group({
             img: '',
             descricao: ''
         });
@@ -217,10 +218,15 @@ export class AnunciarComponent implements OnInit, AfterViewInit {
     uploadImage($event) {
         const file = $event.target.files[0];
         const fileReader = new FileReader();
+
+        // tslint:disable-next-line:prefer-const
+        let item: FormArray;
+        item = this.secondFormGroup.get('imagens') as FormArray;
         fileReader.onloadend = () =>    {
-            this.secondFormGroup.patchValue({
-                imagens: fileReader.result
+            this.testeGroup.patchValue({
+                img: fileReader.result
             });
+            item.push(this.createImage());
         };
         fileReader.readAsDataURL(file);
         // fileReader.onloadend = () =>    {
@@ -230,6 +236,7 @@ export class AnunciarComponent implements OnInit, AfterViewInit {
         // };
         // fileReader.readAsDataURL(file);
         // console.log
+        console.log(this.imagens.value);
     }
 
     proximaEtapa() {
