@@ -93,14 +93,41 @@
                     </mat-select>
                 </section>
 
+                <!-- <section>
+                    <mat-form-field>
+                        <mat-select placeholder="Toppings" [(ngModel)]="teste123" name="umselect" multiple (ngModelChange)="add()">
+                            <mat-option *ngFor="let topping of toppingList" [value]="topping.valor">{{topping.nome}}</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                    <mat-form-field class="example-chip-list">
+                            <mat-chip-list #chipList>
+                              <mat-chip *ngFor="let fruit of caracteristica.value" [selectable]="selectable"
+                                       [removable]="removable" (removed)="remove(fruit)">
+                                {{fruit.nome}}
+                                <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
+                              </mat-chip>
+                              <input placeholder="New fruit..."
+                                     [matChipInputFor]="chipList"
+                                     [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                                     [matChipInputAddOnBlur]="addOnBlur"
+                                     (matChipInputTokenEnd)="add($event)">
+                            </mat-chip-list>
+                          </mat-form-field>
+                </section> -->
+
                 <section class="grupos">
                     <section class="grupo1">
-                        <mat-form-field>
-                            <input matInput placeholder="Caracteristicas">
-                        </mat-form-field>
-                            <input (change)="uploadImage($event)" placeholder="IMGS" type="file">
-                        <!-- <img height="100" *ngIf="imagens.value" src="{{imagens.value}}" alt=""> -->
-                        <img height="100" *ngFor="let m of imagens.value" src="{{m.img}}" alt="">
+                        <input (change)="uploadImage($event)" placeholder="IMGS" type="file">
+                        <div class="blocos-imagens">
+                            <div *ngFor="let m of imagens.value; let i = index">
+                                <div class="image-pequena" *ngIf="!(m.img === null)">
+                                    <button mat-mini-fab (click)="removerImg(i)">
+                                        <mat-icon style="margin-top: -16px;">close</mat-icon>
+                                    </button>
+                                    <img src="{{m.img}}" alt="">
+                                </div>
+                            </div>
+                        </div>
                     </section>
 
                     <section class="grupo2">
@@ -109,6 +136,7 @@
                         </mat-form-field>
                     </section>
                 </section>
+
 
 
                 <mat-divider></mat-divider>

@@ -20,7 +20,8 @@ import {
     MatStepperModule,
     MatStepperIntl,
     MatSelectModule,
-    MAT_CHECKBOX_CLICK_ACTION
+    MAT_CHECKBOX_CLICK_ACTION,
+    MatChipsModule
 } from '@angular/material';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 
@@ -49,7 +50,8 @@ import { SlickCarouselModule } from 'ngx-slick-carousel';
         MatTableModule,
         MatToolbarModule,
         ReactiveFormsModule,
-        SlickCarouselModule
+        SlickCarouselModule,
+        MatChipsModule
     ],
     providers: [
         // {provide: MatStepperIntl, useClass: MyIntl},

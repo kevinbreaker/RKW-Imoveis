@@ -11,13 +11,17 @@ import { AngularFireDatabase, AngularFireList } from 'angularfire2/database';
 import { AnuncioService } from '../../core/services/anuncio.service';
 import { Router } from '@angular/router';
 import { SnackbarService } from '../../shared/utils/snackbar.service';
-
+import { COMMA, ENTER } from '@angular/cdk/keycodes';
 
 import { MapsAPILoader } from '@agm/core';
 import { LocalizacaoImovel } from 'src/app/shared/models/imovel/localizacaoImovel.model';
+import { MatChipInputEvent } from '@angular/material';
 
 declare var google: any;
 
+export interface Fruit {
+    name: string;
+}
 
 interface Marker {
     lat: number;
@@ -49,6 +53,15 @@ interface Location {
 })
 export class AnunciarComponent implements OnInit, AfterViewInit {
 
+    // toppings = new FormControl();
+    // toppingList: any[] = [
+    //     { nome: 'Extra cheese', valor: 'Extra cheese' },
+    //     { nome: 'Mushroom', valor: 'Mushroom' },
+    //     { nome: 'Onion', valor: 'Onion' },
+    //     { nome: 'Pepperoni', valor: 'Pepperoni' },
+    //     { nome: 'Sausage', valor: 'Sausage' },
+    //     { nome: 'Tomato', valor: 'Tomato' }
+    // ];
 
     tipos = [
         {
@@ -60,24 +73,24 @@ export class AnunciarComponent implements OnInit, AfterViewInit {
     ];
 
     tipoImovel = [
-        { descricao: 'Casa', valor: 'casa'},
-        { descricao: 'Apartamento', valor: 'apartamento'},
-        { descricao: 'KitNet', valor: 'kitnet'},
-        { descricao: 'Comercial', valor: 'comercial'}
+        { descricao: 'Casa', valor: 'casa' },
+        { descricao: 'Apartamento', valor: 'apartamento' },
+        { descricao: 'KitNet', valor: 'kitnet' },
+        { descricao: 'Comercial', valor: 'comercial' }
     ];
 
     quantidades = [
-        { valor: 1},
-        { valor: 2},
-        { valor: 3},
-        { valor: 4},
-        { valor: 5},
-        { valor: 6},
-        { valor: 7},
-        { valor: 8},
-        { valor: 9},
-        { valor: 10},
-        { valor: '+10'}
+        { valor: 1 },
+        { valor: 2 },
+        { valor: 3 },
+        { valor: 4 },
+        { valor: 5 },
+        { valor: 6 },
+        { valor: 7 },
+        { valor: 8 },
+        { valor: 9 },
+        { valor: 10 },
+        { valor: '+10' }
     ];
 
     localizacaoImovel: LocalizacaoImovel;
@@ -97,6 +110,7 @@ export class AnunciarComponent implements OnInit, AfterViewInit {
     firstFormGroup: FormGroup;
     secondFormGroup: FormGroup;
     testeGroup: FormGroup;
+    testChip: FormGroup;
 
     latitude = null;
     longitude = null;
@@ -114,6 +128,20 @@ export class AnunciarComponent implements OnInit, AfterViewInit {
     public searchElementRef: ElementRef;
 
     @ViewChild(AgmMap) map: AgmMap;
+
+    // visible = true;
+    // selectable = true;
+    // removable = true;
+    // addOnBlur = true;
+    // readonly separatorKeysCodes: number[] = [ENTER, COMMA];
+    // fruits: Fruit[] = [
+    //     { name: 'Lemon' },
+    //     { name: 'Lime' },
+    //     { name: 'Apple' },
+    // ];
+
+    // teste123;
+
 
     constructor(
         private _formBuilder: FormBuilder,
@@ -134,6 +162,8 @@ export class AnunciarComponent implements OnInit, AfterViewInit {
 
     }
 
+
+
     ngOnInit() {
         this.firstFormGroup = this._formBuilder.group({
             localizacao: ['', Validators.required]
@@ -152,13 +182,16 @@ export class AnunciarComponent implements OnInit, AfterViewInit {
             valorCondominio: [''],
             vaga: false,
             iptu: false,
-            imagens: this._formBuilder.array([this.createImage()])
+            imagens: this._formBuilder.array([this.createImage()]),
+            // caracteristica: this._formBuilder.array([this.createChips()])
             // imagens: ''
         });
         // this.validaUsuario();
+        console.log(this.imagens.value);
         this.teste();
 
     }
+
 
     get condominio(): FormControl {
         return <FormControl>this.secondFormGroup.get('condominio');
@@ -170,15 +203,28 @@ export class AnunciarComponent implements OnInit, AfterViewInit {
         return <FormControl>this.secondFormGroup.get('vaga');
     }
 
-    get imagens(): FormControl {
-        return <FormControl>this.secondFormGroup.get('imagens');
+    get imagens(): FormArray {
+        return <FormArray>this.secondFormGroup.get('imagens');
     }
+
+    // get caracteristica(): FormArray {
+    //     return <FormArray>this.secondFormGroup.get('caracteristica');
+    // }
 
     createImage() {
         return this.testeGroup = this._formBuilder.group({
-            img: '',
-            descricao: ''
+            img: null,
+            descricao: null
         });
+    }
+    // createChips() {
+    //     return this.testChip = this._formBuilder.group({
+    //         nome: null
+    //     });
+    // }
+
+    removerImg(index) {
+        this.imagens.removeAt(index);
     }
 
     ngAfterViewInit() {
@@ -215,18 +261,46 @@ export class AnunciarComponent implements OnInit, AfterViewInit {
         });
     }
 
+    // add(): void {
+    //     console.log('1');
+    //     console.log(this.teste123);
+    //     // const input = event.input;
+    //     // const value = event.value;
+
+    //     // // Add our fruit
+    //     // if (value) {
+    //     // this.fruits.push({ name: this.toppings.value });
+    //     // }
+
+    //     // // Reset the input value
+    //     // if (input) {
+    //     //   input.value = '';
+    //     // }
+    // }
+
+    // remove(fruit: Fruit): void {
+    //     const index = this.fruits.indexOf(fruit);
+
+    //     if (index >= 0) {
+    //         this.fruits.splice(index, 1);
+    //     }
+    // }
+
+
     uploadImage($event) {
+        console.log($event.target.files[0]);
         const file = $event.target.files[0];
         const fileReader = new FileReader();
 
         // tslint:disable-next-line:prefer-const
         let item: FormArray;
         item = this.secondFormGroup.get('imagens') as FormArray;
-        fileReader.onloadend = () =>    {
+        fileReader.onloadend = () => {
             this.testeGroup.patchValue({
                 img: fileReader.result
             });
             item.push(this.createImage());
+            console.log(this.imagens.value);
         };
         fileReader.readAsDataURL(file);
         // fileReader.onloadend = () =>    {
@@ -236,7 +310,6 @@ export class AnunciarComponent implements OnInit, AfterViewInit {
         // };
         // fileReader.readAsDataURL(file);
         // console.log
-        console.log(this.imagens.value);
     }
 
     proximaEtapa() {
