@@ -99,7 +99,8 @@
                             <input matInput placeholder="Caracteristicas">
                         </mat-form-field>
                             <input (change)="uploadImage($event)" placeholder="IMGS" type="file">
-                        <img height="100" *ngIf="imagens.value" src="{{imagens.value}}" alt="">
+                        <!-- <img height="100" *ngIf="imagens.value" src="{{imagens.value}}" alt=""> -->
+                        <img height="100" *ngFor="let m of imagens.value" src="{{m.img}}" alt="">
                     </section>
 
                     <section class="grupo2">
