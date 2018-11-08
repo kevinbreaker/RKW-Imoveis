@@ -1,186 +1,186 @@
 <mat-card class="mat-card-dashboard">
-    <mat-horizontal-stepper #stepper>
-        <mat-step [stepControl]="firstFormGroup">
-            <ng-template matStepLabel>Informe a Localização</ng-template>
-
-            <mat-form-field class="localizacao">
-                <input matInput placeholder="Buscar Localização" [(ngModel)]='location.address_level_1' #search id="searchField">
-                <button mat-raised-button matSuffix color="primary" (click)="updateOnMap()">
-                    <span>
-                        Buscar
-                    </span>
-                </button>
-            </mat-form-field>
-            <!-- <agm-map #map [latitude]="location.lat" [longitude]="location.lng" [zoom]="location.zoom" (mapClick)="mapaClicado($event)">
-                <agm-marker [latitude]="location.marker.lat" [longitude]="location.marker.lng"></agm-marker>
-            </agm-map> -->
-            <div class="enderecoFull">
-                <span>{{enderecoFull}}</span>
-                <mat-spinner color="accent" diameter="30" strokeWidth="3" *ngIf="isLoading"></mat-spinner>
-            </div>
-
-            <div class="botoes">
-                <button mat-raised-button matStepperNext (click)="proximaEtapa()" [disabled]="!enderecoFull">Próximo</button>
-            </div>
-
-        </mat-step>
-        <mat-step [stepControl]="secondFormGroup">
-            <form [formGroup]="secondFormGroup">
-                <ng-template matStepLabel>Dados do imóvel</ng-template>
-
-
-                <mat-form-field class="tamanho1">
-                    <input matInput placeholder="Título">
+    <mat-vertical-stepper [linear]="isLinear" #stepper>
+        <mat-step>
+            <form>
+                <ng-template matStepLabel>Informe a Localização</ng-template>
+                <mat-form-field class="localizacao">
+                    <input matInput placeholder="Buscar Localização" [(ngModel)]='location.address_level_1' name="searchEnd"
+                        #search id="searchField">
+                    <button mat-raised-button matSuffix color="primary" (click)="updateOnMap()">
+                        <span>
+                            Buscar
+                        </span>
+                    </button>
                 </mat-form-field>
-                <mat-form-field>
-                    <mat-select placeholder="Tipo">
-                        <mat-option *ngFor="let tipo of tipos" [value]="tipo.valor">
-                            {{tipo.descricao}}
-                        </mat-option>
-                    </mat-select>
-                </mat-form-field>
-                <mat-form-field>
-                    <mat-select placeholder="Tipo de Imóvel">
-                        <mat-option *ngFor="let tipo of tipoImovel" [value]="tipo.valor">
-                            {{tipo.descricao}}
-                        </mat-option>
-                    </mat-select>
-                </mat-form-field>
-                <mat-form-field>
-                    <input matInput placeholder="Preço">
-                    <span matPrefix>R$&nbsp;&nbsp;&nbsp;</span>
-                </mat-form-field>
-                <mat-form-field class="area">
-                    <input matInput placeholder="Área">
-                    <span matSuffix>m²</span>
-                </mat-form-field>
-                <mat-form-field class="wc">
-                    <mat-select placeholder="WC">
-                        <mat-option *ngFor="let wc of quantidades" [value]="wc.valor">
-                            {{wc.valor}}
-                        </mat-option>
-                    </mat-select>
-                </mat-form-field>
-                <mat-form-field class="tamanho6">
-                    <mat-select placeholder="Nº de Quartos">
-                        <mat-option *ngFor="let quarto of quantidades" [value]="quarto.valor">
-                            {{quarto.valor}}
-                        </mat-option>
-                    </mat-select>
-                </mat-form-field>
-                <section class="checkboxs">
-                    <mat-checkbox formControlName="condominio">Condominio</mat-checkbox>
-                    <mat-form-field *ngIf="condominio.value">
-                        <input matInput placeholder="Valor Condominio" formControlName="valorCondominio">
-                        <span matPrefix>R$&nbsp;&nbsp;&nbsp;</span>
-                    </mat-form-field>
-                    <mat-form-field *ngIf="condominio.value">
-                        <input matInput placeholder="Valor com Condominio" disabled value="1900.00">
-                        <span matPrefix>R$&nbsp;&nbsp;&nbsp;</span>
-                    </mat-form-field>
-                    <mat-checkbox formControlName="iptu">IPTU</mat-checkbox>
-                    <mat-form-field *ngIf="iptu.value">
-                        <input matInput placeholder="Valor do IPTU">
-                        <span matPrefix>R$&nbsp;&nbsp;&nbsp;</span>
-                    </mat-form-field>
-                </section>
-                <section class="checkboxs">
-                    <mat-checkbox formControlName="vaga">Vaga</mat-checkbox>
-                    <mat-select class="tamanho6" placeholder="Nº de Vagas" *ngIf="vaga.value">
-                        <mat-option *ngFor="let vaga of quantidades" [value]="vaga.valor">
-                            {{vaga.valor}}
-                        </mat-option>
-                    </mat-select>
-                </section>
-
-                <!-- <section>
-                    <mat-form-field>
-                        <mat-select placeholder="Toppings" [(ngModel)]="teste123" name="umselect" multiple (ngModelChange)="add()">
-                            <mat-option *ngFor="let topping of toppingList" [value]="topping.valor">{{topping.nome}}</mat-option>
-                        </mat-select>
-                    </mat-form-field>
-                    <mat-form-field class="example-chip-list">
-                            <mat-chip-list #chipList>
-                              <mat-chip *ngFor="let fruit of caracteristica.value" [selectable]="selectable"
-                                       [removable]="removable" (removed)="remove(fruit)">
-                                {{fruit.nome}}
-                                <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
-                              </mat-chip>
-                              <input placeholder="New fruit..."
-                                     [matChipInputFor]="chipList"
-                                     [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
-                                     [matChipInputAddOnBlur]="addOnBlur"
-                                     (matChipInputTokenEnd)="add($event)">
-                            </mat-chip-list>
-                          </mat-form-field>
-                </section> -->
-
-                <section class="grupos">
-                    <section class="grupo1">
-                        <input (change)="uploadImage($event)" placeholder="IMGS" type="file">
-                        <div class="blocos-imagens">
-                            <div *ngFor="let m of imagens.value; let i = index">
-                                <div class="image-pequena" *ngIf="!(m.img === null)">
-                                    <button mat-mini-fab (click)="removerImg(i)">
-                                        <mat-icon style="margin-top: -16px;">close</mat-icon>
-                                    </button>
-                                    <img src="{{m.img}}" alt="">
-                                </div>
-                            </div>
-                        </div>
-                    </section>
-
-                    <section class="grupo2">
-                        <mat-form-field class="campoDescricao" appearance="outline">
-                            <textarea class="campoDescricao" matInput placeholder="Descrição" type="text"></textarea>
-                        </mat-form-field>
-                    </section>
-                </section>
-
-
-
-                <mat-divider></mat-divider>
-
-                <mat-form-field class="tamanho1">
-                    <input matInput placeholder="Endereço Completo" formControlName="enderecoCompleto">
-                </mat-form-field>
-                <mat-form-field class="tamanho2">
-                    <input matInput placeholder="Rua" formControlName="rua">
-                </mat-form-field>
-                <mat-form-field class="tamanho5">
-                    <input matInput placeholder="Número" formControlName="numero">
-                </mat-form-field>
-                <mat-form-field class="tamanho3">
-                    <input matInput placeholder="Bairro/Cidade" formControlName="bairroCidade">
-                </mat-form-field>
-                <mat-form-field class="tamanho3">
-                    <input matInput placeholder="Complemento" formControlName="complemento">
-                </mat-form-field>
-                <mat-form-field class="tamanho4">
-                    <input matInput placeholder="País" formControlName="pais">
-                </mat-form-field>
-                <mat-form-field class="tamanho5">
-                    <input matInput placeholder="Estado" formControlName="estado">
-                </mat-form-field>
-                <mat-form-field class="tamanho4">
-                    <input matInput placeholder="Cep" formControlName="cep">
-                </mat-form-field>
+                <agm-map #map [latitude]="location.lat" [longitude]="location.lng" [zoom]="location.zoom" (mapClick)="mapaClicado($event)">
+                    <agm-marker [latitude]="location.marker.lat" [longitude]="location.marker.lng"></agm-marker>
+                </agm-map>
+                <div class="enderecoFull">
+                    <span>{{enderecoFull}}</span>
+                    <mat-spinner color="accent" diameter="30" strokeWidth="3" *ngIf="isLoading"></mat-spinner>
+                </div>
 
                 <div class="botoes">
-                    <button mat-button matStepperPrevious (click)="resetValues()">Voltar</button>
-                    <button mat-button matStepperNext>Proximo</button>
+                    <button mat-raised-button matStepperNext (click)="proximaEtapa()" [disabled]="!enderecoFull">Próximo</button>
                 </div>
+
             </form>
         </mat-step>
         <mat-step>
-            <ng-template matStepLabel>Termos</ng-template>
-            Você concorda com os termos
+            <div class="dadosImovelForm">
 
-            <p>Walteann - Colocar os termos aqui</p>
-            <div>
-                <button mat-button matStepperPrevious>Voltark</button>
-                <!-- <button mat-button (click)="anunciar()">Enviar</button> -->
+
+                <form>
+                    <ng-template matStepLabel>Dados do imóvel</ng-template>
+
+
+                    <mat-form-field class="tamanho1">
+                        <input matInput placeholder="Título" [(ngModel)]="dadosImovel.titulo" name="titulo" maxlength="200">
+                    </mat-form-field>
+                    <mat-form-field>
+                        <mat-select placeholder="Tipo" [(ngModel)]="dadosImovel.tipo" name="tipo">
+                            <mat-option *ngFor="let tipo of tipos" [value]="tipo.valor">
+                                {{tipo.descricao}}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                    <mat-form-field>
+                        <mat-select placeholder="Tipo de Imóvel" [(ngModel)]="dadosImovel.tipoDeImovel" name="tipoImovel">
+                            <mat-option *ngFor="let tipo of tipoImovel" [value]="tipo.valor">
+                                {{tipo.descricao}}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                    <mat-form-field>
+                        <input matInput placeholder="Preço" [(ngModel)]="dadosImovel.preco" name="preco" currencyMask (ngModelChange)="somaValores()">
+                        <span matPrefix>R$&nbsp;&nbsp;&nbsp;</span>
+                    </mat-form-field>
+                    <mat-form-field class="area">
+                        <input matInput placeholder="Área" [(ngModel)]="dadosImovel.area" name="area">
+                        <span matSuffix>m²</span>
+                    </mat-form-field>
+                    <mat-form-field class="wc">
+                        <mat-select placeholder="WC" [(ngModel)]="dadosImovel.wc" name="wc">
+                            <mat-option *ngFor="let wc of quantidades" [value]="wc.valor">
+                                {{wc.valor}}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                    <mat-form-field class="tamanho6">
+                        <mat-select placeholder="Nº de Quartos" [(ngModel)]="dadosImovel.quartos" name="quartos">
+                            <mat-option *ngFor="let quarto of quantidades" [value]="quarto.valor">
+                                {{quarto.valor}}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                    <section class="checkboxs">
+                        <mat-checkbox [(ngModel)]="dadosImovel.condominio" name="condominio">Condominio</mat-checkbox>
+                        <mat-form-field *ngIf="dadosImovel.condominio">
+                            <input matInput placeholder="Valor Condominio" [(ngModel)]="condominioImovel.valorCondominio"
+                                name="vrCondominio" currencyMask (ngModelChange)="somaValores()">
+                            <span matPrefix>R$&nbsp;&nbsp;&nbsp;</span>
+                        </mat-form-field>
+                        <mat-form-field *ngIf="dadosImovel.condominio">
+                            <input matInput currencyMask placeholder="Valor com Condominio" disabled value="{{condominioImovel.valorComCodominio}}" name="valorCondominio">
+                            <span matPrefix>R$&nbsp;&nbsp;&nbsp;</span>
+                        </mat-form-field>
+                        <mat-checkbox [(ngModel)]="dadosImovel.temIptu" name="temIptu">IPTU</mat-checkbox>
+                        <mat-form-field *ngIf="dadosImovel.temIptu">
+                            <input matInput placeholder="Valor do IPTU" [(ngModel)]="dadosImovel.iptu" name="iptu">
+                            <span matPrefix>R$&nbsp;&nbsp;&nbsp;</span>
+                        </mat-form-field>
+                    </section>
+                    <section class="checkboxs">
+                        <mat-checkbox [(ngModel)]="dadosImovel.temVaga" name="ahVagas" name="temVaga">Vaga de estacionamento</mat-checkbox>
+                        <mat-select class="tamanho6" placeholder="Nº de Vagas" *ngIf="dadosImovel.temVaga" [(ngModel)]="dadosImovel.vagaEstacionamento"
+                            name="vagaE">
+                            <mat-option *ngFor="let vaga of quantidades" [value]="vaga.valor">
+                                {{vaga.valor}}
+                            </mat-option>
+                        </mat-select>
+                    </section>
+
+                    <section class="grupos">
+                        <section class="grupo1">
+                            <input (change)="uploadImage($event)" placeholder="IMGS" type="file" [(ngModel)]="imagensInput">
+                            <div class="blocos-imagens">
+                                <div *ngFor="let m of dadosImovel.imgs; let i = index">
+                                    <div class="image-pequena">
+                                        <button mat-mini-fab (click)="removerImg(i)">
+                                            <mat-icon style="margin-top: -16px;">close</mat-icon>
+                                        </button>
+                                        <img src="{{m.url}}" alt="">
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+
+                        <section class="grupo2">
+                            <mat-form-field class="campoDescricao" appearance="outline">
+                                <textarea class="campoDescricao" maxLength="5000" [(ngModel)]="dadosImovel.descricao" #desc name="descricao" matInput placeholder="Descrição" type="text"></textarea>
+                                <mat-hint align="end">{{desc.value.length}} / 5000</mat-hint>
+                            </mat-form-field>
+                        </section>
+                    </section>
+
+                    <section class="caracteristicas">
+                        <mat-form-field class="checkboxCaracteristica">
+                            <mat-select  placeholder="Caracteristicas" [(ngModel)]="dadosImovel.caracteristicas" name="umselect" multiple>
+                                <mat-option *ngFor="let carac of caracteristicas" [value]="carac.valor">{{carac.caracteristica}}</mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                        <mat-form-field class="chipList">
+                                <mat-chip-list #chipList>
+                                  <mat-chip *ngFor="let caracteristica of dadosImovel.caracteristicas; let i = index" [selectable]="selectable">
+                                    {{caracteristica}}
+                                  </mat-chip>
+                                </mat-chip-list>
+                              </mat-form-field>
+                    </section>
+
+
+                    <mat-divider></mat-divider>
+
+                    <mat-form-field class="tamanho1">
+                        <input matInput placeholder="Endereço Completo" disabled value="{{localizacao.enderecoCompleto}}" name="endenreco">
+                    </mat-form-field>
+                    <mat-form-field class="tamanho2">
+                        <input matInput placeholder="Rua" disabled value="{{localizacao.rua}}" name="rua">
+                    </mat-form-field>
+                    <mat-form-field class="tamanho5">
+                        <input matInput placeholder="Número" [(ngModel)]="localizacao.numero" name="numero" maxlength=20>
+                    </mat-form-field>
+                    <mat-form-field class="tamanho3">
+                        <input matInput placeholder="Bairro/Cidade" disabled value="{{localizacao.bairroCidade}}" name="bairroCidade">
+                    </mat-form-field>
+                    <mat-form-field class="tamanho3">
+                        <input matInput placeholder="Complemento" [(ngModel)]="localizacao.complemento" name="complemento" maxlength="100">
+                    </mat-form-field>
+                    <mat-form-field class="tamanho4">
+                        <input matInput placeholder="País" disabled value="{{localizacao.pais}}" name="pais">
+                    </mat-form-field>
+                    <mat-form-field class="tamanho5">
+                        <input matInput placeholder="Estado" disabled value="{{localizacao.estado}}" name="estado">
+                    </mat-form-field>
+                    <mat-form-field class="tamanho4">
+                        <input matInput placeholder="Cep" disabled value="{{localizacao.cep}}" name="cep">
+                    </mat-form-field>
+
+                    <div class="botoes">
+                        <button mat-button matStepperPrevious (click)="resetValues()">Voltar</button>
+                        <button mat-button matStepperNext (click)="enviarTeste()">Proximo</button>
+                    </div>
+
+                </form>
             </div>
         </mat-step>
-    </mat-horizontal-stepper>
+        <mat-step>
+            <ng-template matStepLabel>Done</ng-template>
+            You are now done.
+            <div>
+                <button mat-button matStepperPrevious>Back</button>
+                <button mat-button (click)="stepper.reset()">Reset</button>
+            </div>
+        </mat-step>
+    </mat-vertical-stepper>
 </mat-card>

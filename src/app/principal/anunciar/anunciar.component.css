@@ -1,6 +1,11 @@
 mat-card {
     overflow-y: scroll;
 }
+
+.dadosImovelForm {
+    /* overflow-y: scroll; */
+    /* height: 1200px; */
+}
 agm-map {
     height: 50vh;
 }
@@ -174,4 +179,30 @@ mat-checkbox {
     width: auto;
     height: auto;
     margin: 0 auto;
+}
+/* novas configurações */
+
+form {
+    margin-bottom: 50px;
+}
+
+.caracteristicas {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    width: 65vw;
+}
+
+.checkboxCaracteristica {
+
+    left: 0;
+    width: 300px;
+    margin-bottom: 10px;
+}
+
+.chipList {
+
+    width: 100%;
+    height: 200px;
 }

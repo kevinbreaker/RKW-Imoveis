@@ -1,4 +1,4 @@
 export class FotoImovel {
-    img: string;
-    descricao: string;
+    url: string;
+    // descricao: string;
 }

@@ -1,4 +1,4 @@
 export class CondominioImovel {
-    valorCondominio: string;
-    valorComCodominio: string;
+    valorCondominio?: string;
+    valorComCodominio?: string;
 }

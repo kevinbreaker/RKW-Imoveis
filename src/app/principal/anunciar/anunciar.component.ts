@@ -1,3 +1,4 @@
+import { FotoImovel } from './../../shared/models/imovel/fotoImovel.model';
 import { DadosImovel } from './../../shared/models/imovel/dadosImovel.model';
 import { Imovel } from './../../shared/models/imovel/imovel.model';
 import { AuthService } from './../../core/services/auth/auth.service';
@@ -16,12 +17,13 @@ import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import { MapsAPILoader } from '@agm/core';
 import { LocalizacaoImovel } from 'src/app/shared/models/imovel/localizacaoImovel.model';
 import { MatChipInputEvent } from '@angular/material';
+import { CondominioImovel } from 'src/app/shared/models/imovel/condominioImovel.model';
 
 declare var google: any;
 
-export interface Fruit {
-    name: string;
-}
+// export interface Fruit {
+//     name: string;
+// }
 
 interface Marker {
     lat: number;
@@ -53,15 +55,34 @@ interface Location {
 })
 export class AnunciarComponent implements OnInit, AfterViewInit {
 
-    // toppings = new FormControl();
-    // toppingList: any[] = [
-    //     { nome: 'Extra cheese', valor: 'Extra cheese' },
-    //     { nome: 'Mushroom', valor: 'Mushroom' },
-    //     { nome: 'Onion', valor: 'Onion' },
-    //     { nome: 'Pepperoni', valor: 'Pepperoni' },
-    //     { nome: 'Sausage', valor: 'Sausage' },
-    //     { nome: 'Tomato', valor: 'Tomato' }
-    // ];
+    caracteristicas: any[] = [
+        { caracteristica: 'Perto de vias de acesso', valor: 'Perto de vias de acesso' },
+        { caracteristica: 'Próximo a shopping', valor: 'Próximo a shopping' },
+        { caracteristica: 'Próximo a transporte público', valor: 'Próximo a transporte público' },
+        { caracteristica: 'Próximo a escola', valor: 'Próximo a escola' },
+        { caracteristica: 'Próximo a hospitais', valor: 'Próximo a hospitais' },
+        { caracteristica: 'Churrasqueira', valor: 'Churrasqueira' },
+        { caracteristica: 'Elevador', valor: 'Elevador' },
+        { caracteristica: 'Jardim', valor: 'Jardim' },
+        { caracteristica: 'Salão de festas', valor: 'Salão de festas' },
+        { caracteristica: 'Playground', valor: 'Playground' },
+        { caracteristica: 'Piscina', valor: 'Piscina' },
+        { caracteristica: 'Piscina para adulto', valor: 'Piscina para adulto' },
+        { caracteristica: 'Piscina infantil', valor: 'Piscina infantil' },
+        { caracteristica: 'Salão de jogos', valor: 'Salão de jogos' },
+        { caracteristica: 'Sauna', valor: 'Sauna' },
+        { caracteristica: 'Gerador elétrico', valor: 'Gerador elétrico' },
+        { caracteristica: 'Segurança 24h', valor: 'Segurança 24h' },
+        { caracteristica: 'Interfone', valor: 'Interfone' },
+        { caracteristica: 'Condomínio fechado', valor: 'Condomínio fechado' },
+        { caracteristica: 'Sistema de alarme', valor: 'Sistema de alarme' },
+        { caracteristica: 'Cabeamento estruturado', valor: 'Cabeamento estruturado' },
+        { caracteristica: 'TV a cabo', valor: 'TV a cabo' },
+        { caracteristica: 'Conexão à internet', valor: 'Conexão à internet' },
+        { caracteristica: 'Garagem', valor: 'Garagem' },
+        { caracteristica: 'Cozinha', valor: 'Cozinha' },
+        { caracteristica: 'Área de serviço', valor: 'Área de serviço' }
+    ];
 
     tipos = [
         {
@@ -79,6 +100,35 @@ export class AnunciarComponent implements OnInit, AfterViewInit {
         { descricao: 'Comercial', valor: 'comercial' }
     ];
 
+    newCaracteristica: any[] = [];
+
+    visible = true;
+    selectable = true;
+    // removable = true;
+    // addOnBlur = true;
+
+
+    // // enviarAnuncio() {
+    // //     return new Promise((resolve, reject) =>   {
+    // //         this.db.list('anuncios')
+    // //                 .push({
+    // //                     coordenadas: this.coord,
+    // //                     nome: this.firstFormGroup.value,
+    // //                     endereco: this.secondFormGroup.value
+    // //                 })
+    // //                 .then(() => {
+    // //                     resolve();
+    // //                     alert('enviou');
+    // //                 });
+    // //     })
+    // // }
+
+
+
+
+
+    teste: Imovel = new Imovel();
+
     quantidades = [
         { valor: 1 },
         { valor: 2 },
@@ -93,8 +143,6 @@ export class AnunciarComponent implements OnInit, AfterViewInit {
         { valor: '+10' }
     ];
 
-    localizacaoImovel: LocalizacaoImovel;
-
     geocoder: any;
     public location: Location = {
         lat: 0,
@@ -107,21 +155,15 @@ export class AnunciarComponent implements OnInit, AfterViewInit {
         zoom: 17
     };
 
-    firstFormGroup: FormGroup;
-    secondFormGroup: FormGroup;
-    testeGroup: FormGroup;
-    testChip: FormGroup;
-
-    latitude = null;
-    longitude = null;
-
-    // condominio;
 
     isLoading = false;
 
     enderecoFull: string = null;
 
-    public searchControl: FormControl;
+    latitude = null;
+    longitude = null;
+    foto: FotoImovel = new FotoImovel();
+
     public zoom: number;
 
     @ViewChild('search')
@@ -129,106 +171,47 @@ export class AnunciarComponent implements OnInit, AfterViewInit {
 
     @ViewChild(AgmMap) map: AgmMap;
 
-    // visible = true;
-    // selectable = true;
-    // removable = true;
-    // addOnBlur = true;
-    // readonly separatorKeysCodes: number[] = [ENTER, COMMA];
-    // fruits: Fruit[] = [
-    //     { name: 'Lemon' },
-    //     { name: 'Lime' },
-    //     { name: 'Apple' },
-    // ];
+    isLinear = false; // para disabilitar pular de etapar sem preencher o campo
+    firstFormGroup;
+    secondFormGroup;
 
-    // teste123;
+    buscarEndereco;
+    wc;
 
+    localizacao: LocalizacaoImovel = new LocalizacaoImovel();
+    condominioImovel: CondominioImovel = new CondominioImovel();
+
+    imagensInput;
+
+    dadosImovel: DadosImovel = new DadosImovel();
+    fotoImovel;
 
     constructor(
         private _formBuilder: FormBuilder,
-        private snackbarService: SnackbarService,
-        private router: Router,
-        private afAuth: AngularFireAuth,
-        private authService: AuthService,
         private anuncioService: AnuncioService,
-        private mapsAPILoader: MapsAPILoader,
+        private router: Router,
+        private snackbarService: SnackbarService,
         public mapsApiLoader: MapsAPILoader,
         private ngZone: NgZone
     ) {
+
         this.mapsApiLoader = mapsApiLoader;
 
         this.mapsApiLoader.load().then(() => {
             this.geocoder = new google.maps.Geocoder();
         });
 
+        this.fotoImovel = [];
+
     }
-
-
 
     ngOnInit() {
-        this.firstFormGroup = this._formBuilder.group({
-            localizacao: ['', Validators.required]
-        });
-        this.secondFormGroup = this._formBuilder.group({
-            enderecoCompleto: [{ value: '', disabled: true }, Validators.required],
-            rua: [{ value: '', disabled: true }, Validators.required],
-            bairroCidade: [{ value: '', disabled: true }, Validators.required],
-            numero: ['', Validators.required],
-            complemento: [''],
-            pais: [{ value: '', disabled: true }, Validators.required],
-            cep: [{ value: '', disabled: true }, Validators.required],
-            estado: [{ value: '', disabled: true }, Validators.required],
-
-            condominio: false,
-            valorCondominio: [''],
-            vaga: false,
-            iptu: false,
-            imagens: this._formBuilder.array([this.createImage()]),
-            // caracteristica: this._formBuilder.array([this.createChips()])
-            // imagens: ''
-        });
-        // this.validaUsuario();
-        console.log(this.imagens.value);
-        this.teste();
-
-    }
-
-
-    get condominio(): FormControl {
-        return <FormControl>this.secondFormGroup.get('condominio');
-    }
-    get iptu(): FormControl {
-        return <FormControl>this.secondFormGroup.get('iptu');
-    }
-    get vaga(): FormControl {
-        return <FormControl>this.secondFormGroup.get('vaga');
-    }
-
-    get imagens(): FormArray {
-        return <FormArray>this.secondFormGroup.get('imagens');
-    }
-
-    // get caracteristica(): FormArray {
-    //     return <FormArray>this.secondFormGroup.get('caracteristica');
-    // }
-
-    createImage() {
-        return this.testeGroup = this._formBuilder.group({
-            img: null,
-            descricao: null
-        });
-    }
-    // createChips() {
-    //     return this.testChip = this._formBuilder.group({
-    //         nome: null
-    //     });
-    // }
-
-    removerImg(index) {
-        this.imagens.removeAt(index);
+        this.minhaLocalizacao();
     }
 
     ngAfterViewInit() {
-        this.mapsAPILoader.load().then(() => {
+
+        this.mapsApiLoader.load().then(() => {
             // let autocomplete = new google.maps.places.Autocomplete(this.searchElementRef.nativeElement, {
             // tslint:disable-next-line:prefer-const
             let autocomplete = new google.maps.places.Autocomplete(this.searchElementRef.nativeElement, {
@@ -259,107 +242,10 @@ export class AnunciarComponent implements OnInit, AfterViewInit {
                 });
             });
         });
+
     }
 
-    // add(): void {
-    //     console.log('1');
-    //     console.log(this.teste123);
-    //     // const input = event.input;
-    //     // const value = event.value;
-
-    //     // // Add our fruit
-    //     // if (value) {
-    //     // this.fruits.push({ name: this.toppings.value });
-    //     // }
-
-    //     // // Reset the input value
-    //     // if (input) {
-    //     //   input.value = '';
-    //     // }
-    // }
-
-    // remove(fruit: Fruit): void {
-    //     const index = this.fruits.indexOf(fruit);
-
-    //     if (index >= 0) {
-    //         this.fruits.splice(index, 1);
-    //     }
-    // }
-
-
-    uploadImage($event) {
-        console.log($event.target.files[0]);
-        const file = $event.target.files[0];
-        const fileReader = new FileReader();
-
-        // tslint:disable-next-line:prefer-const
-        let item: FormArray;
-        item = this.secondFormGroup.get('imagens') as FormArray;
-        fileReader.onloadend = () => {
-            this.testeGroup.patchValue({
-                img: fileReader.result
-            });
-            item.push(this.createImage());
-            console.log(this.imagens.value);
-        };
-        fileReader.readAsDataURL(file);
-        // fileReader.onloadend = () =>    {
-        //     this.secondFormGroup.patchValue({
-        //         imagens: fileReader.result
-        //     });
-        // };
-        // fileReader.readAsDataURL(file);
-        // console.log
-    }
-
-    proximaEtapa() {
-        this.secondFormGroup.setValue({
-            enderecoCompleto: this.enderecoFull,
-            rua: this.enderecoFull.split(',')[0],
-            numero: (this.enderecoFull.split(',')[1]).split('-')[0],
-            bairroCidade: (this.enderecoFull.split(',')[2]).split('-')[1] ?
-                (this.enderecoFull.split(',')[1]).split('-')[1] + ' /' + (this.enderecoFull.split(',')[2]).split('-')[0] :
-                (this.enderecoFull.split(',')[1]).split('-')[1],
-            pais: this.enderecoFull.split(',')[4] ? this.enderecoFull.split(',')[4] : this.enderecoFull.split(',')[3],
-            estado: (this.enderecoFull.split(',')[2]).split('-')[1] ? (this.enderecoFull.split(',')[2]).split('-')[1]
-                : this.enderecoFull.split(',')[2],
-            cep: this.enderecoFull.split(',')[4] ? this.enderecoFull.split(',')[3] : null,
-            complemento: null
-        });
-        this.latitude = this.location.marker.lat;
-        this.longitude = this.location.marker.lng;
-    }
-
-    get enderecoCompleto(): FormControl {
-        return <FormControl>this.secondFormGroup.get('enderecoCompleto');
-    }
-
-    resetValues() {
-        this.secondFormGroup.setValue({
-            enderecoCompleto: '',
-            rua: '',
-            numero: '',
-            bairroCidade: '',
-            pais: '',
-            estado: '',
-            cep: '',
-            complemento: null
-        });
-        this.latitude = null;
-        this.longitude = null;
-    }
-
-    mapaClicado($event: MouseEvent) {
-        this.isLoading = true;
-        this.location.marker.lat = $event.coords.lat;
-        this.location.marker.lng = $event.coords.lng;
-
-        this.findAddressByCoordinates(this.location.marker.lat, this.location.marker.lng);
-        console.log($event.coords.lat);
-        console.log($event.coords.lng);
-    }
-
-    teste() {
+    minhaLocalizacao() {
         if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition(posicao => {
                 this.location.lat = posicao.coords.latitude;
@@ -377,49 +263,18 @@ export class AnunciarComponent implements OnInit, AfterViewInit {
         }
     }
 
-    // anunciar() {
 
-    //     this.anuncioService
-    //         .sendAnuncio(this.coord, this.firstFormGroup.value, this.secondFormGroup.value)
-    //         .then(() => {
-    //             this.snackbarService.snackBarMessage('Anuncio publicado, veja agora seu anuncio no mapa');
-    //             this.router.navigate(['/imoveis']);
-    //         });
-    // }
+    anunciar(imovel: Imovel) {
 
-    // enviarAnuncio() {
-    //     return new Promise((resolve, reject) =>   {
-    //         this.db.list('anuncios')
-    //                 .push({
-    //                     coordenadas: this.coord,
-    //                     nome: this.firstFormGroup.value,
-    //                     endereco: this.secondFormGroup.value
-    //                 })
-    //                 .then(() => {
-    //                     resolve();
-    //                     alert('enviou');
-    //                 });
-    //     })
-    // }
-
-    validaUsuario() {
-        console.log(this.afAuth.auth.currentUser);
-        if (this.afAuth.auth.currentUser) {
-            if (localStorage.getItem(StorageKeys.AUTH_TOKEN) === this.afAuth.auth.currentUser.uid) {
-                console.log('usuario Logado');
-                // this.teste();
-            } else {
-                localStorage.removeItem(StorageKeys.AUTH_TOKEN);
-                this.authService.logout();
-                console.log('tem token mas n sao os mesmos');
-                this.router.navigate(['/login']);
-            }
-        } else {
-            console.log('não tem token');
-            this.router.navigate(['/login']);
-        }
+        this.anuncioService
+            .sendAnuncio(imovel)
+            .then(() => {
+                this.snackbarService.snackBarMessage('Anuncio publicado, veja agora seu anuncio no mapa');
+                this.router.navigate(['/imoveis']);
+            });
     }
-    // procura endereco digitando o texto
+
+    // // procura endereco digitando o texto
     updateOnMap() {
         this.isLoading = true;
         let full_address: string = this.location.address_level_1 || '';
@@ -473,6 +328,15 @@ export class AnunciarComponent implements OnInit, AfterViewInit {
         });
     }
 
+    mapaClicado($event: MouseEvent) {
+        this.isLoading = true;
+        this.location.marker.lat = $event.coords.lat;
+        this.location.marker.lng = $event.coords.lng;
+
+        this.findAddressByCoordinates(this.location.marker.lat, this.location.marker.lng);
+        console.log($event.coords.lat);
+        console.log($event.coords.lng);
+    }
 
     findAddressByCoordinates(lat, lng) {
         this.geocoder.geocode({
@@ -489,6 +353,63 @@ export class AnunciarComponent implements OnInit, AfterViewInit {
                 this.isLoading = false;
             }
         });
+    }
+
+    somaValores() {
+        if (this.condominioImovel.valorCondominio || parseFloat(this.condominioImovel.valorCondominio) === 0.0) {
+            this.condominioImovel.valorComCodominio =
+                parseFloat(this.condominioImovel.valorCondominio + this.dadosImovel.preco).toFixed(2);
+            console.log(this.condominioImovel.valorComCodominio);
+        }
+    }
+
+    proximaEtapa() {
+        this.localizacao.enderecoCompleto = this.enderecoFull;
+        this.localizacao.rua = this.enderecoFull.split(',')[0];
+        this.localizacao.numero = (this.enderecoFull.split(',')[1]).split('-')[0];
+
+        this.localizacao.bairroCidade = (this.enderecoFull.split(',')[2]).split('-')[1] ?
+            (this.enderecoFull.split(',')[1]).split('-')[1] + ' /' + (this.enderecoFull.split(',')[2]).split('-')[0] :
+            (this.enderecoFull.split(',')[1]).split('-')[1];
+
+        this.localizacao.pais = this.enderecoFull.split(',')[4] ? this.enderecoFull.split(',')[4] : this.enderecoFull.split(',')[3];
+        this.localizacao.estado = (this.enderecoFull.split(',')[2]).split('-')[1] ? (this.enderecoFull.split(',')[2]).split('-')[1]
+            : this.enderecoFull.split(',')[2];
+        this.localizacao.cep = this.enderecoFull.split(',')[4] ? this.enderecoFull.split(',')[3] : null;
+        this.localizacao.complemento = null;
+
+        this.latitude = this.location.marker.lat;
+        this.longitude = this.location.marker.lng;
+    }
+
+    uploadImage($event) {
+        const file = $event.target.files[0];
+        const fileReader = new FileReader();
+        let test;
+        fileReader.onloadend = () => {
+
+            test = fileReader.result;
+
+            this.fotoImovel.push({ url: test });
+            this.dadosImovel.imgs = this.fotoImovel;
+            this.imagensInput = null;
+        };
+        fileReader.readAsDataURL(file);
+
+    }
+
+    removerImg(index) {
+        this.dadosImovel.imgs.splice(index, 1);
+        console.log(this.dadosImovel.imgs);
+        console.log(this.fotoImovel);
+    }
+
+    enviarTeste() {
+
+        this.teste.descricaoImovel = this.dadosImovel;
+        this.teste.localizacao = this.localizacao;
+
+        this.anunciar(this.teste);
     }
 
 }

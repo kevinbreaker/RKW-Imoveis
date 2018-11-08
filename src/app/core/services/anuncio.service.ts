@@ -1,6 +1,8 @@
 import { AngularFireDatabase } from 'angularfire2/database';
 import { Injectable } from '@angular/core';
 import * as firebase from 'firebase';
+import { Imovel } from 'src/app/shared/models/imovel/imovel.model';
+
 
 @Injectable({
     providedIn: 'root'
@@ -11,11 +13,9 @@ export class AnuncioService {
         private firebaseDb: AngularFireDatabase
     ) { }
 
-    sendAnuncio(coord, nome, endereco) {
+    sendAnuncio(imovel: Imovel) {
         return this.firebaseDb.database.ref('anuncios').push({
-                cooordenadas: coord,
-                nome: nome,
-                endereco: endereco
+                imovel: imovel
         });
     }
 
