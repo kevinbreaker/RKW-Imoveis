@@ -104,30 +104,8 @@ export class AnunciarComponent implements OnInit, AfterViewInit {
 
     visible = true;
     selectable = true;
-    // removable = true;
-    // addOnBlur = true;
 
-
-    // // enviarAnuncio() {
-    // //     return new Promise((resolve, reject) =>   {
-    // //         this.db.list('anuncios')
-    // //                 .push({
-    // //                     coordenadas: this.coord,
-    // //                     nome: this.firstFormGroup.value,
-    // //                     endereco: this.secondFormGroup.value
-    // //                 })
-    // //                 .then(() => {
-    // //                     resolve();
-    // //                     alert('enviou');
-    // //                 });
-    // //     })
-    // // }
-
-
-
-
-
-    teste: Imovel = new Imovel();
+    enviarImovel: Imovel = new Imovel();
 
     quantidades = [
         { valor: 1 },
@@ -186,7 +164,14 @@ export class AnunciarComponent implements OnInit, AfterViewInit {
     dadosImovel: DadosImovel = new DadosImovel();
     fotoImovel;
 
+    termoUso: false;
+    usuarioKey: string;
+
+    user: AngularFireAuth;
+
     constructor(
+        private afAuth: AngularFireAuth,
+        private authService: AuthService,
         private _formBuilder: FormBuilder,
         private anuncioService: AnuncioService,
         private router: Router,
@@ -206,7 +191,11 @@ export class AnunciarComponent implements OnInit, AfterViewInit {
     }
 
     ngOnInit() {
+        this.validaUsuario();
         this.minhaLocalizacao();
+        this.user = this.afAuth;
+        this.usuarioKey = this.user.auth.currentUser.uid;
+        this.dadosImovel.temVaga = false;
     }
 
     ngAfterViewInit() {
@@ -267,10 +256,19 @@ export class AnunciarComponent implements OnInit, AfterViewInit {
     anunciar(imovel: Imovel) {
 
         this.anuncioService
-            .sendAnuncio(imovel)
-            .then(() => {
-                this.snackbarService.snackBarMessage('Anuncio publicado, veja agora seu anuncio no mapa');
-                this.router.navigate(['/imoveis']);
+        .sendAnuncio(imovel)
+        .then((dados) => {
+            console.log(dados.key);
+
+                this.anuncioService.setAnuncioLocalizacao({
+                    usuarioUid: this.usuarioKey,
+                    anuncioUid: dados.key,
+                    imovelLocalizacaoLatitude: this.enviarImovel.localizacao.latitude,
+                    imovelLocalizacaoLongitude: this.enviarImovel.localizacao.longitude
+                }).then(() =>   {
+                    this.snackbarService.snackBarMessage('Anuncio publicado, veja agora seu anuncio no mapa');
+                    this.router.navigate(['/imoveis']);
+                });
             });
     }
 
@@ -345,13 +343,15 @@ export class AnunciarComponent implements OnInit, AfterViewInit {
                 lng: lng
             }
         }, (results, status) => {
+            console.log(status);
+            this.enderecoFull = results[0].formatted_address;
             console.log(results[0].formatted_address);
             console.log(this.enderecoFull);
-            this.enderecoFull = results[0].formatted_address;
             console.log(this.enderecoFull);
-            if (this.enderecoFull === results[0].formatted_address) {
-                this.isLoading = false;
-            }
+            console.log(status);
+
+            this.isLoading = false;
+
         });
     }
 
@@ -380,6 +380,9 @@ export class AnunciarComponent implements OnInit, AfterViewInit {
 
         this.latitude = this.location.marker.lat;
         this.longitude = this.location.marker.lng;
+
+        this.localizacao.latitude = this.location.marker.lat;
+        this.localizacao.longitude = this.location.marker.lng;
     }
 
     uploadImage($event) {
@@ -400,16 +403,35 @@ export class AnunciarComponent implements OnInit, AfterViewInit {
 
     removerImg(index) {
         this.dadosImovel.imgs.splice(index, 1);
-        console.log(this.dadosImovel.imgs);
-        console.log(this.fotoImovel);
     }
 
-    enviarTeste() {
+    enviarAnuncio() {
 
-        this.teste.descricaoImovel = this.dadosImovel;
-        this.teste.localizacao = this.localizacao;
+        this.enviarImovel.descricaoImovel = this.dadosImovel;
+        this.enviarImovel.localizacao = this.localizacao;
+        this.enviarImovel.usuario = this.user.auth.currentUser.uid;
+        this.anunciar(this.enviarImovel);
+    }
 
-        this.anunciar(this.teste);
+    reseta() {
+        this.termoUso = false;
+    }
+
+    validaUsuario() {
+        // let usuarioStorage = localStorage.getItem(StorageKeys.AUTH_TOKEN);
+        console.log(this.afAuth.auth.currentUser);
+        if (this.afAuth.auth.currentUser) {
+            if (localStorage.getItem(StorageKeys.AUTH_TOKEN) === this.afAuth.auth.currentUser.uid) {
+                console.log('usuario Logado');
+            } else {
+                this.authService.logout();
+                console.log('tem token mas n sao os mesmos');
+                this.router.navigate(['/login']);
+            }
+        } else {
+            console.log('não tem token');
+            this.router.navigate(['/login']);
+        }
     }
 
 }

@@ -1,6 +1,7 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material';
 import { ImovelDialog } from '../../../shared/imovel/imovel-dialog.interface';
+import { Imovel } from 'src/app/shared/models/imovel/imovel.model';
 
 @Component({
     selector: 'app-dialog-imovel-view',
@@ -14,11 +15,11 @@ export class DialogImovelViewComponent implements OnInit {
 
     constructor(
         // public dialogRef: MatDialogRef<DialogImovelViewComponent>,
-        @Inject(MAT_DIALOG_DATA) public imovel: ImovelDialog
+        @Inject(MAT_DIALOG_DATA) public imovel
     ) { }
 
     ngOnInit() {
         console.log(this.imovel);
-        this.imagens = this.imovel.dadosDoImovel.imgs;
+        // this.imagens = this.imovel.imgs;
     }
 }

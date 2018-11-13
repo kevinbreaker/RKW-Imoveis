@@ -1,24 +1,24 @@
 <div class="linha">
-    <h2 mat-dialog-title>{{imovel.dadosDoImovel.titulo}}</h2>
+    <h2 mat-dialog-title>{{imovel.descricaoImovel.titulo}}</h2>
     <mat-dialog-content height="600" class="mat-typography" >
         <div class="descricao">
-            <p style="white-space: pre;">{{imovel.dadosDoImovel.descricao}}</p>
+            <p style="white-space: pre;">{{imovel.descricaoImovel.descricao}}</p>
             <ul>
-                <li *ngFor="let c of imovel.caracteristicas">{{c.caracteristica}}</li>
+                <li *ngFor="let c of imovel.descricaoImovel.caracteristicas">{{c}}</li>
             </ul>
         </div>
 
         <div class="view">
 
             <div class="imagens-micro">
-                <img *ngFor="let img of imagens" src="{{img.img}}" alt="">
+                <img *ngFor="let img of imovel.descricaoImovel.imgs" src="{{img.url}}" alt="">
             </div>
 
         </div>
 
     </mat-dialog-content>
     <mat-dialog-actions align="end">
-        <button mat-button mat-dialog-close>Cancel</button>
-        <button mat-button [mat-dialog-close]="true" cdkFocusInitial>Install</button>
+        <button mat-button mat-dialog-close>Fechar</button>
+        <!-- <button mat-button [mat-dialog-close]="true" cdkFocusInitial>Install</button> -->
     </mat-dialog-actions>
 </div>

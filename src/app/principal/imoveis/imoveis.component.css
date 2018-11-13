@@ -1,3 +1,12 @@
 agm-map {
-    height: 300px;
+    height: 70vh;
+}
+
+.campoLocalizacao {
+    margin-bottom: 10px;
+}
+
+.inputLocalizacao {
+
+    width: 400px;
 }

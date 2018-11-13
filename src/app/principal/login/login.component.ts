@@ -55,7 +55,7 @@ export class LoginComponent implements OnInit {
     }
 
     changeAction(): void {
-        this.router.navigate(['signup']);
+        // this.router.navigate(['signup']);
         this.configuracao.isLogin = !this.configuracao.isLogin;
         this.configuracao.actionText = !this.configuracao.isLogin ? 'Cadastrar' : 'Login';
         this.configuracao.buttonActionText = !this.configuracao.isLogin ? 'Já tenho uma conta' : 'Cadastrar novo usuario';

@@ -2,7 +2,29 @@ import { AnuncioService } from './../../core/services/anuncio.service';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material';
 import { DialogImovelViewComponent } from '../components/dialog-imovel-view/dialog-imovel-view.component';
+import { AgmMap } from '@agm/core';
 // declare var google;
+
+
+interface Marker {
+    lat: number;
+    lng: number;
+    label?: string;
+    draggable: boolean;
+}
+
+interface Location {
+    lat: number;
+    lng: number;
+    viewport?: Object;
+    zoom: number;
+    address_level_1?: string;
+    address_level_2?: string;
+    address_country?: string;
+    address_zip?: string;
+    address_state?: string;
+    marker?: Marker;
+}
 
 @Component({
     selector: 'app-imoveis',
@@ -10,6 +32,20 @@ import { DialogImovelViewComponent } from '../components/dialog-imovel-view/dial
     styleUrls: ['./imoveis.component.css']
 })
 export class ImoveisComponent implements OnInit {
+
+    geocoder: any;
+    public location: Location = {
+        lat: 0,
+        lng: 0,
+        marker: {
+            lat: 0,
+            lng: 0,
+            draggable: true
+        },
+        zoom: 17
+    };
+
+    @ViewChild(AgmMap) map: AgmMap;
 
 
     minhaPosicao: any = {
@@ -183,6 +219,7 @@ export class ImoveisComponent implements OnInit {
 
     loadingAllAnuncios() {
         this.anuncioService.getAllAnuncios().subscribe((imovel) => {
+            console.log(imovel);
             this.imoveis = imovel;
         });
     }
@@ -190,7 +227,7 @@ export class ImoveisComponent implements OnInit {
         const image = 'https://developers.google.com/maps/documentation/javascript/examples/full/images/beachflag.png';
         if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition(posicao => {
-                this.minhaPosicao  = {
+                this.minhaPosicao = {
                     zoom: 17,
                     latitude: posicao.coords.latitude,
                     longitude: posicao.coords.longitude,
@@ -198,7 +235,7 @@ export class ImoveisComponent implements OnInit {
                 };
             });
         } else {
-            this.minhaPosicao  = {
+            this.minhaPosicao = {
                 zoom: 15,
                 latitude: -8.059009022548944,
                 longitude: -34.88249920614351,
@@ -208,13 +245,72 @@ export class ImoveisComponent implements OnInit {
     }
 
     // responsavel para abrir o modal com os dados do imovel
-    openDialog(imovel) {
-        const dialogRef = this.dialog.open(DialogImovelViewComponent, {
-            data: imovel
-        });
+    openDialog(anuncioUid) {
 
-        dialogRef.afterClosed().subscribe(result => {
-          console.log(`Dialog result: ${result}`);
+        this.anuncioService.getAnuncioId(anuncioUid).subscribe(imovel => {
+
+            const dialogRef = this.dialog.open(DialogImovelViewComponent, {
+                data: imovel
+            });
+            dialogRef.afterClosed().subscribe(result => {
+                console.log(`Dialog result: ${result}`);
+            });
+        });
+    }
+
+    // // procura endereco digitando o texto
+    updateOnMap() {
+        // this.isLoading = true;
+        let full_address: string = this.location.address_level_1 || '';
+        if (this.location.address_level_2) { full_address = full_address + ' ' + this.location.address_level_2; }
+        if (this.location.address_state) { full_address = full_address + ' ' + this.location.address_state; }
+        if (this.location.address_country) { full_address = full_address + ' ' + this.location.address_country; }
+
+        this.findLocation(full_address);
+    }
+
+    findLocation(address) {
+        if (!this.geocoder) { this.geocoder = new google.maps.Geocoder(); }
+        this.geocoder.geocode({
+            'address': address
+        }, (results, status) => {
+            if (status === google.maps.GeocoderStatus.OK) {
+                // tslint:disable-next-line:no-var-keyword
+                for (var i = 0; i < results[0].address_components.length; i++) {
+                    // tslint:disable-next-line:prefer-const
+                    let types = results[0].address_components[i].types;
+
+                    if (types.indexOf('locality') !== -1) {
+                        this.location.address_level_2 = results[0].address_components[i].long_name;
+                    }
+                    if (types.indexOf('country') !== -1) {
+                        this.location.address_country = results[0].address_components[i].long_name;
+                    }
+                    if (types.indexOf('postal_code') !== -1) {
+                        this.location.address_zip = results[0].address_components[i].long_name;
+                    }
+                    if (types.indexOf('administrative_area_level_1') !== -1) {
+                        this.location.address_state = results[0].address_components[i].long_name;
+                    }
+                }
+
+                if (results[0].geometry.location) {
+                    // this.enderecoFull = results[0].formatted_address;
+                    this.location.lat = results[0].geometry.location.lat();
+                    this.location.lng = results[0].geometry.location.lng();
+                    this.location.marker.lat = results[0].geometry.location.lat();
+                    this.location.marker.lng = results[0].geometry.location.lng();
+                    this.location.marker.draggable = true;
+                    this.location.viewport = results[0].geometry.viewport;
+
+
+                    // this.isLoading = false;
+                }
+
+                this.map.triggerResize();
+            } else {
+                // this.snackbarService.snackBarMessage('Sorry, this search produced no results');
+            }
         });
     }
 

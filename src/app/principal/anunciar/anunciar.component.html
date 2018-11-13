@@ -30,7 +30,7 @@
             <div class="dadosImovelForm">
 
 
-                <form>
+                <div class="formulario">
                     <ng-template matStepLabel>Dados do imóvel</ng-template>
 
 
@@ -52,7 +52,8 @@
                         </mat-select>
                     </mat-form-field>
                     <mat-form-field>
-                        <input matInput placeholder="Preço" [(ngModel)]="dadosImovel.preco" name="preco" currencyMask (ngModelChange)="somaValores()">
+                        <input matInput placeholder="Preço" [(ngModel)]="dadosImovel.preco" name="preco" currencyMask
+                            (ngModelChange)="somaValores()">
                         <span matPrefix>R$&nbsp;&nbsp;&nbsp;</span>
                     </mat-form-field>
                     <mat-form-field class="area">
@@ -81,7 +82,8 @@
                             <span matPrefix>R$&nbsp;&nbsp;&nbsp;</span>
                         </mat-form-field>
                         <mat-form-field *ngIf="dadosImovel.condominio">
-                            <input matInput currencyMask placeholder="Valor com Condominio" disabled value="{{condominioImovel.valorComCodominio}}" name="valorCondominio">
+                            <input matInput currencyMask placeholder="Valor com Condominio" disabled value="{{condominioImovel.valorComCodominio}}"
+                                name="valorCondominio">
                             <span matPrefix>R$&nbsp;&nbsp;&nbsp;</span>
                         </mat-form-field>
                         <mat-checkbox [(ngModel)]="dadosImovel.temIptu" name="temIptu">IPTU</mat-checkbox>
@@ -91,13 +93,14 @@
                         </mat-form-field>
                     </section>
                     <section class="checkboxs">
-                        <mat-checkbox [(ngModel)]="dadosImovel.temVaga" name="ahVagas" name="temVaga">Vaga de estacionamento</mat-checkbox>
-                        <mat-select class="tamanho6" placeholder="Nº de Vagas" *ngIf="dadosImovel.temVaga" [(ngModel)]="dadosImovel.vagaEstacionamento"
-                            name="vagaE">
-                            <mat-option *ngFor="let vaga of quantidades" [value]="vaga.valor">
-                                {{vaga.valor}}
-                            </mat-option>
-                        </mat-select>
+                        <mat-checkbox [(ngModel)]="dadosImovel.temVaga" name="ahVagas">Vaga de
+                            estacionamento
+                        </mat-checkbox>
+                            <mat-select class="tamanho6" placeholder="Nº de Vagas" [(ngModel)]="dadosImovel.vagaEstacionamento" name="tVaga">
+                                <mat-option *ngFor="let vaga of quantidades" [value]="vaga.valor">
+                                    {{vaga.valor}}
+                                </mat-option>
+                            </mat-select>
                     </section>
 
                     <section class="grupos">
@@ -117,7 +120,8 @@
 
                         <section class="grupo2">
                             <mat-form-field class="campoDescricao" appearance="outline">
-                                <textarea class="campoDescricao" maxLength="5000" [(ngModel)]="dadosImovel.descricao" #desc name="descricao" matInput placeholder="Descrição" type="text"></textarea>
+                                <textarea class="campoDescricao" maxLength="5000" [(ngModel)]="dadosImovel.descricao"
+                                    #desc name="descricao" matInput placeholder="Descrição" type="text"></textarea>
                                 <mat-hint align="end">{{desc.value.length}} / 5000</mat-hint>
                             </mat-form-field>
                         </section>
@@ -125,61 +129,95 @@
 
                     <section class="caracteristicas">
                         <mat-form-field class="checkboxCaracteristica">
-                            <mat-select  placeholder="Caracteristicas" [(ngModel)]="dadosImovel.caracteristicas" name="umselect" multiple>
+                            <mat-select placeholder="Caracteristicas" [(ngModel)]="dadosImovel.caracteristicas" name="umselect"
+                                multiple>
                                 <mat-option *ngFor="let carac of caracteristicas" [value]="carac.valor">{{carac.caracteristica}}</mat-option>
                             </mat-select>
                         </mat-form-field>
                         <mat-form-field class="chipList">
-                                <mat-chip-list #chipList>
-                                  <mat-chip *ngFor="let caracteristica of dadosImovel.caracteristicas; let i = index" [selectable]="selectable">
+                            <mat-chip-list #chipList>
+                                <mat-chip *ngFor="let caracteristica of dadosImovel.caracteristicas; let i = index"
+                                    [selectable]="selectable">
                                     {{caracteristica}}
-                                  </mat-chip>
-                                </mat-chip-list>
-                              </mat-form-field>
+                                </mat-chip>
+                            </mat-chip-list>
+                        </mat-form-field>
                     </section>
 
 
                     <mat-divider></mat-divider>
-
-                    <mat-form-field class="tamanho1">
-                        <input matInput placeholder="Endereço Completo" disabled value="{{localizacao.enderecoCompleto}}" name="endenreco">
-                    </mat-form-field>
-                    <mat-form-field class="tamanho2">
-                        <input matInput placeholder="Rua" disabled value="{{localizacao.rua}}" name="rua">
-                    </mat-form-field>
-                    <mat-form-field class="tamanho5">
-                        <input matInput placeholder="Número" [(ngModel)]="localizacao.numero" name="numero" maxlength=20>
-                    </mat-form-field>
-                    <mat-form-field class="tamanho3">
-                        <input matInput placeholder="Bairro/Cidade" disabled value="{{localizacao.bairroCidade}}" name="bairroCidade">
-                    </mat-form-field>
-                    <mat-form-field class="tamanho3">
-                        <input matInput placeholder="Complemento" [(ngModel)]="localizacao.complemento" name="complemento" maxlength="100">
-                    </mat-form-field>
-                    <mat-form-field class="tamanho4">
-                        <input matInput placeholder="País" disabled value="{{localizacao.pais}}" name="pais">
-                    </mat-form-field>
-                    <mat-form-field class="tamanho5">
-                        <input matInput placeholder="Estado" disabled value="{{localizacao.estado}}" name="estado">
-                    </mat-form-field>
-                    <mat-form-field class="tamanho4">
-                        <input matInput placeholder="Cep" disabled value="{{localizacao.cep}}" name="cep">
-                    </mat-form-field>
-
+                        <mat-form-field class="tamanho1">
+                            <input matInput placeholder="Endereço Completo" disabled value="{{localizacao.enderecoCompleto}}"
+                                name="endenreco">
+                        </mat-form-field>
+                        <mat-form-field class="tamanho2">
+                            <input matInput placeholder="Rua" disabled value="{{localizacao.rua}}" name="rua">
+                        </mat-form-field>
+                        <mat-form-field class="tamanho5">
+                            <input matInput placeholder="Número" [(ngModel)]="localizacao.numero" name="numero" maxlength=20>
+                        </mat-form-field>
+                        <mat-form-field class="tamanho3">
+                            <input matInput placeholder="Bairro/Cidade" disabled value="{{localizacao.bairroCidade}}" name="bairroCidade">
+                        </mat-form-field>
+                        <mat-form-field class="tamanho3">
+                            <input matInput placeholder="Complemento" [(ngModel)]="localizacao.complemento" name="complemento"
+                                maxlength="100">
+                        </mat-form-field>
+                        <mat-form-field class="tamanho4">
+                            <input matInput placeholder="País" disabled value="{{localizacao.pais}}" name="pais">
+                        </mat-form-field>
+                        <mat-form-field class="tamanho5">
+                            <input matInput placeholder="Estado" disabled value="{{localizacao.estado}}" name="estado">
+                        </mat-form-field>
+                        <mat-form-field class="tamanho4">
+                            <input matInput placeholder="Cep" disabled value="{{localizacao.cep}}" name="cep">
+                        </mat-form-field>
                     <div class="botoes">
-                        <button mat-button matStepperPrevious (click)="resetValues()">Voltar</button>
-                        <button mat-button matStepperNext (click)="enviarTeste()">Proximo</button>
+                        <button mat-button matStepperPrevious>Voltar</button>
+                        <button mat-button matStepperNext>Proximo</button>
                     </div>
 
-                </form>
+                </div>
             </div>
         </mat-step>
         <mat-step>
             <ng-template matStepLabel>Done</ng-template>
-            You are now done.
-            <div>
-                <button mat-button matStepperPrevious>Back</button>
-                <button mat-button (click)="stepper.reset()">Reset</button>
+
+            <mat-card>
+                <mat-card-title>
+                    TERMO DE USO
+                </mat-card-title>
+                <mat-card-content>
+
+                    <div>
+                        <p style="white-space: pre;">
+                            Dessa forma, o termo de uso é caracterizado por conter as regras para utilização do
+                            serviço,
+                            sendo de interesse do proprietário do site/app possuir este tipo de contrato eletrônico
+                            para se
+                            resguardar de quaisquer riscos jurídicos. Por meio deste instrumento o prestador dos
+                            serviços
+                            pode delimitar as situações em que será responsável e por quais situações não poderá ser
+                            imputável em caso de falhas. Para tanto, devem ser tomadas algumas precauções.
+
+                            Em primeiro lugar, é importante definir exatamente o significado dos termos utilizados no
+                            documento. Um site ou app geralmente possui uma linguagem muito específica, que pode gerar
+                            dúvidas, motivo pelo qual a definição exata dos termos utilizados nos serviços oferecidos é
+                            imprescindível.
+
+                            Da mesma forma, a delimitação exata do escopo do serviço que o site/app oferece é
+                            importante
+                            para evitar quaisquer reclamações futuras que não estejam relacionadas ao que o site/app
+                            oferece aos seus usuários.
+                        </p>
+
+                    </div>
+                </mat-card-content>
+            </mat-card>
+            <mat-checkbox [(ngModel)]="termoUso" name="termo-uso">Eu Aceito todos os Termos de Uso.</mat-checkbox>
+            <div class="botoes">
+                <button mat-button matStepperPrevious (click)="reseta()">Voltar</button>
+                <button mat-button [disabled]="!termoUso" (click)="enviarAnuncio()">Enviar Anuncio</button>
             </div>
         </mat-step>
     </mat-vertical-stepper>
