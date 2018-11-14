@@ -3,7 +3,7 @@
       <button mat-icon-button (click)="drawer.toggle()">
           <mat-icon>menu</mat-icon>
       </button>
-      <span>RKW Imóveis</span>
+      <span class="logo">RKW Imóveis</span>
       <span class="spacer"></span>
       <button mat-icon-button (click)="logout()">
           <mat-icon>logout</mat-icon>
@@ -12,7 +12,7 @@
 </mat-toolbar>
 
 <mat-drawer-container class="conteudo" hasBackdrop="false">
-  <mat-drawer #drawer mode="side" opened>
+  <mat-drawer #drawer mode="side" [opened]="!mobile">
       <mat-nav-list class="menu_sidenav">
           <mat-list-item class="menulist" *ngFor="let m of menu" [routerLink]="m.rota" routerLinkActiveOptions="{exact: true}">
               <mat-icon matListIcon>{{m.icone}}</mat-icon>

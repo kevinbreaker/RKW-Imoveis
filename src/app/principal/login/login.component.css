@@ -2,11 +2,12 @@ mat-card {
     overflow: hidden;
 }
 
-mat-card-title > mat-toolbar{
+mat-card-title>mat-toolbar {
     color: #FFF;
-    background-image: linear-gradient(to right, #064253, #52BCDA);
+    background: var(--primary-dark-color);
 }
-.login-container    {
+
+.login-container {
     display: flex;
     justify-content: center;
     align-content: center;
@@ -15,7 +16,16 @@ mat-card-title > mat-toolbar{
 
 .login-card {
     margin-top: 50px;
+    padding: 0;
     width: 400px;
+}
+
+.px-2 {
+    padding: 1em 1.5em;
+}
+
+.mat-input-element {
+    caret-color: var(--primary-color)!important
 }
 
 form {
@@ -23,7 +33,24 @@ form {
     flex-direction: column;
 }
 
+.btn-custom {
+    color: var(--icon-color);
+    text-transform: uppercase;
+    margin: 5px 0;
+    background: var(--primary-color)
+}
+
+.btn-custom:disabled {
+    background: var(--primary-light-color)
+}
+
+.btn-custom-flat {
+    margin: 5px;
+    color: var(--accent-color);
+    text-transform: uppercase;
+    font-weight: 550;
+}
+
 mat-spinner {
     stroke: #FFF;
 }
-

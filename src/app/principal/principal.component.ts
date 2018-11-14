@@ -16,11 +16,16 @@ export class PrincipalComponent implements OnInit {
         { title: 'Entrar', icone: 'person', rota: '/login' }
     ];
 
+    mobile: Boolean = false;
+
     constructor(
         private authService: AuthService
     ) { }
 
     ngOnInit() {
+      /Mobile/g.test(navigator.userAgent)
+        ? this.mobile = true
+        : this.mobile = false
     }
 
     logout() {

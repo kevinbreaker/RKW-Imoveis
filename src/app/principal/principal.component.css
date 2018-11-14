@@ -1,28 +1,40 @@
 mat-toolbar {
-    /* background-color: #3c8dbc; */
-    background-image: linear-gradient(to right, #52BCDA , #064253)
+    background: var(--primary-dark-color);
 }
 
-mat-drawer-container > mat-drawer {
-    width: 250px;
-    background-color: #1F4553;
+.mat-icon {
+    color: var(--icon-color)
+}
 
+.logo {
+    text-transform: uppercase;
+    color: var(--text-dak);
+    font-family: monospace;
+    font-weight: 700;
+    padding: 0 10px;
+}
+
+mat-drawer-container>mat-drawer {
+    width: 280px;
+    background: var(--primary-dark-color);
 }
 
 .conteudo {
-    height: 100%;
-    height: 100vh;
+    height: calc(100% - 64px);
+    overflow: hidden;
 }
 
 .menulist {
-    color: #6B919F;;
+    color: var(--icon-color);
 }
 
-.menulist:hover {
-    color: #FFF;;
+.mat-list-item:hover,
+.mat-list-item:hover .material-icons {
+    color: var(--text-dark);
+    background: var(--primary-color)
 }
 
-mat-drawer-container > mat-drawer-content {
+mat-drawer-container>mat-drawer-content {
     background-color: #eceff4;
 }
 
